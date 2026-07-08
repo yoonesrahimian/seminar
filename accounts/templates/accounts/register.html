@@ -1,208 +1,30 @@
 {% extends 'base.html' %}
-{% load static %}
-  <head>
-    {% block head %}
-    <link href="{% static 'checkout.css' %}" rel="stylesheet" />
-    {% endblock %}
-  </head>
-  <body class="bg-body-tertiary">
-    {% block main %}
-    <div class="container">
-      <main>
-        <div class="py-5 text-center">
-          <h1 class="h2">Register</h1>
-          <p class="lead">
-            Create your account to join seminars, connect with participants, and manage your events easily.
-          </p>
-        </div>
-        <div class="row g-5">
-          <div class="col-md-7 col-lg-8 mx-auto">
-            <form class="needs-validation" action="{% url 'register' %}" method="post" enctype="multipart/form-data" novalidate>
-              {% csrf_token %}
-              <div class="row g-3">
-                <div class="col-sm-6">
-                  <label for="first_Name" class="form-label">First name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="first_Name"
-                    placeholder=""
-                    value=""
-                    name="first_name"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Valid first name is required.
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <label for="last_Name" class="form-label">Last name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="last_Name"
-                    placeholder=""
-                    value=""
-                    name="last_name"
-                  />
-                  <div class="invalid-feedback">
-                    Valid last name is required.
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="username" class="form-label">Username</label>
-                  <div class="input-group has-validation">
-                    <span class="input-group-text">@</span>
-                    <input
-                      type="text"
-                      class="form-control {% if errors.username %}is-invalid{% endif %}"
-                      id="username"
-                      placeholder="Username"
-                      name="username"
-                      required
-                    />
-                    <div class="invalid-feedback">
-                      {% if errors.username %}{{ errors.username }}
-                      {% else %}Your username is required.
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="password" class="form-label">Password</label>
-                  <div class='input-group'>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    placeholder=""
-                    required
-                  />
-                  <button
-                      class="btn btn-outline-secondary"
-                      type="button"
-                      onclick="togglePassword()"
-                  >
-                  show
-                  </button>
-                  </div>
-                  <div class="invalid-feedback">
-                    Please enter a password.
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="phone" class="form-label">Phone</label>
-                  <input
-                    type="tel"
-                    class="form-control {% if errors.phone %}is-invalid{% endif %}"
-                    id="phone"
-                    name="phone"
-                    placeholder=""
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    {% if errors.phone %}{{ errors.phone }}
-                    {% else %}Please enter a valid phone number.
-                    {% endif %}
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="email" class="form-label"
-                    >Email
-                    <span class="text-body-secondary">(Optional)</span></label
-                  >
-                  <input
-                    type="email"
-                    class="form-control {% if errors.email %}is-invalid{% endif %}"
-                    id="email"
-                    name="email"
-                    placeholder="you@example.com"
-                  />
-                  <div class="invalid-feedback">
-                    {% if errors.email %}{{ errors.email }}
-                    {% else %}Please enter a valid email address for shipping updates.
-                    {% endif %}
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label for="address" class="form-label">Address
-                    <span class="text-body-secondary">(Optional)</span></label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="address"
-                    name="address"
-                    placeholder="1234 Main St"
-                  />
-                  <div class="invalid-feedback">
-                    Please enter your shipping address.
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="country" class="form-label">Country</label>
-                  <select class="form-select" id="country" name="country">
-                    <option value="">Choose...</option>
-                    <option>Iran</option>
-                    <option>United States</option>
-                  </select>
-                  <div class="invalid-feedback">
-                    Please select a valid country.
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="state" class="form-label">City</label>
-                  <select class="form-select" id="state" name="city">
-                    <option value="">Choose...</option>
-                    <option>Isfahan</option>
-                    <option>California</option>
-                  </select>
-                  <div class="invalid-feedback">
-                    Please provide a valid state.
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <label for="profile_picture" class="form-label">Profile picture
-                    <span class="text-body-secondary">(Optional)</span></label>
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="profile_picture"
-                    name="profile_picture"
-                    placeholder=""
-                  />
-                  <div class="invalid-feedback">Profile picture required.</div>
-                </div>
-              </div>
-              <button class="w-100 btn btn-primary btn-lg mt-4" type="submit">
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
-      </main>
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="py-5 text-center">
+    <h1 class="h2">Register</h1>
+    <p class="lead">
+      Create your account to join seminars, connect with participants, and manage your events easily.
+    </p>
+  </div>
+  <div class="col-md-7 col-lg-8 mx-auto">
+    <form action="{% url 'register' %}" method="post" novalidate>
+    {% csrf_token %}
+    <!-- {{ form }} -->
+    {% for field in form %}
+    {{ field.label_tag }}
+    {{ field }}
+    {% for error in field.errors %}
+    <div class="text-danger">
+      {{ error }}
     </div>
-    <script>
-    function togglePassword() {
-        const passwordInput =
-            document.getElementById("password");
-
-        if (passwordInput.type === "password") {
-
-            passwordInput.type = "text";
-
-        } else {
-
-            passwordInput.type = "password";
-
-        }
-    }
-    </script>
-    <script
-      src="../assets/dist/js/bootstrap.bundle.min.js"
-      class="astro-vvvwv3sm"
-    ></script>
-    <script src="{% static 'checkout.js' %}" class="astro-vvvwv3sm"></script>
-  {% endblock %}
-  </body>
-</html>
+    {% endfor %}
+    {% endfor %}
+    <button type="submit" class="btn btn-primary w-100 btn-lg mt-4">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
