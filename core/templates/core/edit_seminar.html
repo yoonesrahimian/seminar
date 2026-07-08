@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+  <head>
+    {% block head %}
+    <link href="{% static 'checkout.css' %}" rel="stylesheet" />
+    {% endblock %}
+  </head>
+  <body class="bg-body-tertiary">
+    {% block main %}
+    <div class="container">
+      <main>
+        <div class="py-5 text-center">
+          <h1 class="h2">Edit Seminar</h1>
+        </div>
+        <div class="row g-5">
+          <div class="col-md-7 col-lg-8 mx-auto">
+            <form class="needs-validation" action="{% url 'edit_seminar' seminar.id %}" method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-sm-12">
+                  <label for="title" class="form-label">Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    placeholder=""
+                    value="{{ seminar.title }}"
+                    name="title"
+                    required
+                  />
+                </div>
+                <div class="col-sm-12">
+                  <label for="discription" class="form-label">Discription</label>
+                  <input
+                    class="form-control"
+                    id="discription"
+                    placeholder=""
+                    name="discription"
+                    value="{{ seminar.discription }}"
+                  ></input>
+                </div>
+                <div class="col-12">
+                  <label for="location" class="form-label">Address</label>
+                  <div class='input-group'>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="location"
+                    name="location"
+                    value="{{ seminar.location }}"
+                    placeholder=""
+                  />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="price" class="form-label">Price</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="price"
+                    name="price"
+                    placeholder=""
+                    value="{{ seminar.price }}"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label for="session_date" class="form-label">Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="session_date"
+                    name="session_date"
+                    value="{{ seminar.session_date|date:'Y-m-d' }}"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label for="session_time_start" class="form-label">Time Start</label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="session_time_start"
+                    name="session_time_start"
+                    value="{{ seminar.session_time_start|time:'H:i' }}"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label for="session_time_end" class="form-label">Time End</label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="session_time_end"
+                    name="session_time_end"
+                    value="{{ seminar.session_time_end|time:'H:i' }}"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="is_public"
+                  name="is_public"
+                  {% if seminar.is_public %}checked{% endif %}
+                />
+                <label class="form-check-label" for="is_public"
+                  >Public</label>
+                </div>
+                <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="is_inperson"
+                  name="is_inperson"
+                  {% if seminar.is_inperson %}checked{% endif %}
+                />
+                <label class="form-check-label" for="is_inperson"
+                  >Inperson</label>
+                </div>
+                <div class="col-md-12">
+                  <div class="text-center">
+                    <img src="{{ seminar.image.url }}" width="600px" >
+                  </div>
+                  <label for="image" class="form-label">Seminar Image</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="image"
+                    name="image"
+                    placeholder=""
+                  />
+                </div>
+              </div>
+              <input type="submit" class="w-100 btn btn-primary btn-lg mt-4" value="Submit">
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+    function togglePassword() {
+        const passwordInput =
+            document.getElementById("password");
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+        } else {
+
+            passwordInput.type = "password";
+
+        }
+    }
+    </script>
+    <script
+      src="../assets/dist/js/bootstrap.bundle.min.js"
+      class="astro-vvvwv3sm"
+    ></script>
+    <script src="{% static 'checkout.js' %}" class="astro-vvvwv3sm"></script>
+  {% endblock %}
+  </body>
+</html>

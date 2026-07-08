@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+<head>
+    {% block head %}
+    <title>Seminar Detail</title>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{% static 'seminar_detail.css' %}" rel="stylesheet" />
+    {% endblock %}
+</head>
+<body>
+    {% block main %}
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
+                    src="{% if seminar.image %}
+                        {{ seminar.image.url }}
+                        {% else %}
+                        {% static 'images/default_seminar_image.png' %}
+                        {% endif %}"
+                    alt="..." /></div>
+                <div class="col-md-6">
+                    <div class="small mb-1">seminar code: {{ seminar.id }}</div>
+                    <h1 class="display-5 fw-bolder">{{ seminar.title }}</h1>
+                    <div class="fs-5 mb-5">
+                        <!-- <span class="text-decoration-line-through">$45.00</span> -->
+                        <span>{{ seminar.price }} $</span>
+                    </div>
+                    <p class="lead">{{ seminar.discription }}</p>
+                    <hr>
+                    <p class="lead">teacher: {{ seminar.teacher }}</p>
+                    <p class="lead">{{ seminar.session_date }}</p>
+                    <p class="lead">{{ seminar.session_time_start }} to {{ seminar.session_time_end }}</p>
+                    <p class="lead">{% if seminar.location %}address: {{ seminar.location }}{% endif %}</p>
+                    <p class="lead">{% if seminar.is_inperson %}Inperson{% else %}Online{% endif %}</p>
+                    <hr>
+                    <p class="lead">{{ seminar.participants.count }} Participants</p>
+                    <div class="d-flex">
+                        <!-- <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" /> -->
+                        {% if not request.user == seminar.teacher %}
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if joined %}
+                            <button class="btn btn-success-dark flex-shrink-0 me-4" disabled>Participated!</button>
+                            {% else %}
+                            <button class="btn btn-outline-dark flex-shrink-0 me-4" type="submit">Participate</button>
+                            {% endif %}
+                        </form>
+                        {% else %}
+                        <a href="{% url 'edit_seminar' seminar.id %}" class="btn btn-outline-dark flex-shrink-0 me-4">Edit</a>
+                        <a href="{% url 'delete_seminar' seminar.id %}" class="btn btn-outline-dark flex-shrink-0 me-4">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'seminar_detail.js' %}"></script>
+    {% endblock %}
+</body>
