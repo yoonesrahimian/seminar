@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from accounts.models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
+from django.contrib.auth.forms import AuthenticationForm
 
 # def register(request):
 #     errors = {}
@@ -42,9 +43,11 @@ from .forms import RegisterForm
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
             return redirect("login")
     else:
         form = RegisterForm()
@@ -53,14 +56,23 @@ def register(request):
 def login_view(request):
     errors = {}
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
+        # form = LoginForm(request.POST)
+        form = LoginForm(request, data=request.POST)
+        # username = request.POST.get('username')
+        # password = request.POST.get('password')
+        # user = authenticate(request, username=username, password=password)
+        # if user:
+            # login(request, user)
+            # return redirect('home')
+        # errors['user_pass'] = 'Username or Password is incorrect.' 
+        # return render)
+        if form.is_valid():
+            login(request, form.get_user())
             return redirect('home')
-        errors['user_pass'] = 'Username or Password is incorrect.'  
-    return render(request, 'accounts/login.html', context={'errors':errors})
+    # form = LoginForm()
+    else:
+        form = LoginForm()
+    return render(request, 'accounts/login.html', context={'form':form})
 
 def logout_view(request):
     logout(request)
