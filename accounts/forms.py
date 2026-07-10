@@ -1,13 +1,7 @@
 from django import forms
 from .models import User
-
-# class RegisterForm(forms.Form):
-#     firstname=forms.CharField(
-#         widget=forms.TextInput(attrs={
-#             'class': 'form-control',
-#             'placeholder': 'Your name'
-#         })
-#         )
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(forms.ModelForm):
     class Meta:
@@ -18,11 +12,10 @@ class RegisterForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-            # field.widget.attrs['required'] = ''
-    widgets = {
-        "country": forms.Select(attrs={"class": "form-select"}),
-        'city': forms.TextInput(attrs={'class': 'form-select'}),
-    }
+        widgets = {
+            "country": forms.Select(attrs={"class": "form-select"}),
+            'city': forms.TextInput(attrs={'class': 'form-select'}),
+        }
 
     def clean_phone(self):
         phone = self.cleaned_data["phone"]
@@ -38,3 +31,21 @@ class RegisterForm(forms.ModelForm):
             )
 
         return phone
+
+# class LoginForm(forms.Form):
+#     username = forms.CharField()
+#     password = forms.CharField()
+
+#     def clean(self):
+#         data = super().clean()
+#         username = data.get('username')
+#         password = data.get('password')
+#         user = authenticate(request, username=username, password=password)
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control form-control-lg"})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"class": "form-control form-control-lg"})
+    )

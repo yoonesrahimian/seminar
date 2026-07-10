@@ -21,6 +21,6 @@ class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_picture/', null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     first_name = models.CharField(max_length=150, blank=False)
-    email = models.EmailField(unique=True, blank=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
     # user_role = models.CharField(choices=('organizer','teacher','participant'), default='participant')
     # bio
