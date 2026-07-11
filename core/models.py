@@ -13,7 +13,7 @@ class Seminar(models.Model):
     session_date = models.DateField()
     session_time_start = models.TimeField()
     session_time_end = models.TimeField()
-    image = models.ImageField(upload_to='seminar_image/', null=True)
+    image = models.ImageField(upload_to='seminar_image/', blank=True)
     # max_particiant = models.CharField(max_length=7)
     # Platform
     # hashtag = models.TextField()

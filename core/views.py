@@ -69,23 +69,29 @@ def home(request):
     return render(request, 'core/home.html', context={'seminars':seminars})
 
 def edit_seminar(request, seminar_id):
-    seminar = Seminar.objects.filter(id=seminar_id).first()
+    # seminar = Seminar.objects.filter(id=seminar_id).first()
+    seminar = Seminar.objects.get(pk=seminar_id)
     if request.method == 'POST':
-        seminar.title = request.POST.get('title')
-        seminar.discription = request.POST.get('discription')
-        seminar.location = request.POST.get('location')
-        seminar.price = request.POST.get('price')
-        seminar.session_date = request.POST.get('session_date')
-        seminar.session_time_start = request.POST.get('session_time_start')
-        seminar.session_time_end = request.POST.get('session_time_end')
-        seminar.is_public = request.POST.get('is_public') == 'true'
-        seminar.is_inperson = request.POST.get('is_inperson') == 'true'
-        seminar.image = request.FILES.get('image')
-        seminar.teacher = request.user
-        seminar.participant = '{}'
-        seminar.save()
+        form = NewSeminarForm(request.POST, request.FILES, instance=seminar)
+        if form.is_valid():
+            form.save()
+        # seminar.title = request.POST.get('title')
+        # seminar.discription = request.POST.get('discription')
+        # seminar.location = request.POST.get('location')
+        # seminar.price = request.POST.get('price')
+        # seminar.session_date = request.POST.get('session_date')
+        # seminar.session_time_start = request.POST.get('session_time_start')
+        # seminar.session_time_end = request.POST.get('session_time_end')
+        # seminar.is_public = request.POST.get('is_public') == 'true'
+        # seminar.is_inperson = request.POST.get('is_inperson') == 'true'
+        # seminar.image = request.FILES.get('image')
+        # seminar.teacher = request.user
+        # seminar.participant = '{}'
+        # seminar.save()
         return redirect('seminar_detail', seminar_id=seminar.id)
-    return render(request, 'core/edit_seminar.html', context={'seminar':seminar})
+    else:
+        form = NewSeminarForm(instance=seminar)
+    return render(request, 'core/edit_seminar.html', context={'form':form, 'seminar':seminar})
 
 def delete_seminar(request, seminar_id):
     Seminar.objects.filter(id=seminar_id).delete()
