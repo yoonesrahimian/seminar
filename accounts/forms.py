@@ -7,15 +7,12 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username", "password", "phone", "email", "address", "country", "city", "profile_picture"]
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-        widgets = {
-            "country": forms.Select(attrs={"class": "form-select"}),
-            'city': forms.TextInput(attrs={'class': 'form-select'}),
-        }
+        
 
     def clean_phone(self):
         phone = self.cleaned_data["phone"]
