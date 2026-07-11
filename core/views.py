@@ -1,40 +1,54 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar
+from .forms import NewSeminarForm
 
 def home(request):
     return render(request, 'home.html')
 
+# @login_required()
+# def new_seminar(request):
+#     errors = {}
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         discription = request.POST.get('discription')
+#         location = request.POST.get('location')
+#         price = request.POST.get('price')
+#         session_date = request.POST.get('session_date')
+#         session_time_start = request.POST.get('session_time_start')
+#         session_time_end = request.POST.get('session_time_end')
+#         is_public = request.POST.get('is_public') == 'true'
+#         is_inperson = request.POST.get('is_inperson') == 'true'
+#         image = request.FILES.get('image')
+#         teacher = request.user
+#         Seminar.objects.create(
+#             title=title,
+#             discription=discription,
+#             location=location,
+#             price=price,
+#             is_public=is_public,
+#             is_inperson=is_inperson,
+#             image=image,
+#             teacher=teacher,
+#             session_date=session_date,
+#             session_time_start=session_time_start,
+#             session_time_end=session_time_end,
+#         )
+#         return redirect('seminar_list')
+#     return render(request, 'core/new_seminar.html')
+
 @login_required()
 def new_seminar(request):
-    errors = {}
     if request.method == 'POST':
-        title = request.POST.get('title')
-        discription = request.POST.get('discription')
-        location = request.POST.get('location')
-        price = request.POST.get('price')
-        session_date = request.POST.get('session_date')
-        session_time_start = request.POST.get('session_time_start')
-        session_time_end = request.POST.get('session_time_end')
-        is_public = request.POST.get('is_public') == 'true'
-        is_inperson = request.POST.get('is_inperson') == 'true'
-        image = request.FILES.get('image')
-        teacher = request.user
-        Seminar.objects.create(
-            title=title,
-            discription=discription,
-            location=location,
-            price=price,
-            is_public=is_public,
-            is_inperson=is_inperson,
-            image=image,
-            teacher=teacher,
-            session_date=session_date,
-            session_time_start=session_time_start,
-            session_time_end=session_time_end,
-        )
-        return redirect('seminar_list')
-    return render(request, 'core/new_seminar.html')
+        form = NewSeminarForm(request.POST, request.FILES)
+        if form.is_valid():
+            seminar = form.save(commit=False)
+            seminar.teacher = request.user
+            form.save()
+            return redirect('seminar_list')
+    else:
+        form = NewSeminarForm()
+    return render(request, 'core/new_seminar.html', context={'form':form})
 
 def seminar_detail(request, seminar_id):
     seminar = Seminar.objects.get(id=seminar_id)
