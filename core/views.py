@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar
 from .forms import NewSeminarForm
+from datetime import datetime, date
 
 def home(request):
     return render(request, 'home.html')
@@ -52,13 +53,14 @@ def new_seminar(request):
 
 def seminar_detail(request, seminar_id):
     seminar = Seminar.objects.get(id=seminar_id)
-    joined = seminar.participants.filter(id=request.user.id).exists()
+    is_joined = seminar.participants.filter(id=request.user.id).exists()
+    
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect('login')
         seminar.participants.add(request.user)
         return redirect('seminar_detail', seminar_id=seminar_id)
-    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'joined':joined})
+    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
 
 def seminar_list(request):
     seminars = Seminar.objects.all()
