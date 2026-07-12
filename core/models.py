@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 class Seminar(models.Model):
     teacher = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='teacher')
@@ -20,6 +21,30 @@ class Seminar(models.Model):
     # category
     # discount_code
     # is_course
+
+    @property
+    def status(self):
+        today = datetime.now().today()
+        now = datetime.combine(today, datetime.now().time().replace(microsecond=0))
+        start = datetime.combine(today, self.session_time_start)
+        end = datetime.combine(today, self.session_time_end)
+
+        if now < start:
+            return "upcoming"
+        elif now >= end:
+            return "completed"
+        else:
+            return "inprogress"
+
+    @property
+    def progress(self):
+        today = datetime.now().today()
+        now = datetime.combine(today, datetime.now().time().replace(microsecond=0))
+        start = datetime.combine(today, self.session_time_start)
+        end = datetime.combine(today, self.session_time_end)
+
+        progress = (now - start) / (end - start) * 100
+        return int(progress)
 
 # class Session(models.Model):
 #     seminar = models.ForeignKey(to='core.Seminar', on_delete=models.CASCADE)
