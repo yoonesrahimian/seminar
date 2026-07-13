@@ -1,9 +1,15 @@
 from django.db import models
 from datetime import datetime
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Seminar(models.Model):
-    teacher = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='teacher')
-    participants = models.ManyToManyField(to='accounts.User', related_name='participant', blank=True)
+    teacher = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='taught_seminars')
+    participants = models.ManyToManyField(to='accounts.User', related_name='joined_seminars', blank=True)
     # organizer = models.TextField(null=True)
     title = models.CharField(max_length=50)
     discription = models.TextField()
@@ -18,7 +24,7 @@ class Seminar(models.Model):
     # max_particiant = models.CharField(max_length=7)
     # Platform
     # hashtag = models.TextField()
-    # category
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="seminars")
     # discount_code
     # is_course
 

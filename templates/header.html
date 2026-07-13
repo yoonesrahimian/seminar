@@ -4,6 +4,17 @@
     <li><a href="{% url 'home' %}" class="nav-link px-2">Home</a></li>
     <li><a href="{% url 'new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
     <li><a href="{% url 'seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
+    <li>
+      <div class="dropdown">
+        <a class="nav-link px-2 dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+
+        <ul class="dropdown-menu">
+          {% for category in categories %}
+          <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
+          {% endfor %}
+        </ul>
+    </div>
+    </li>
   </ul>
   <div class="text-end">
     {% if user.is_authenticated %}
