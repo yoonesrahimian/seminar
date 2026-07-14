@@ -7,7 +7,7 @@ class NewSeminarForm(forms.ModelForm):
         exclude = ["teacher", "participants"]
         widgets = {
             "title": forms.TextInput(attrs={"class":"form-control"}),
-            "discription": forms.Textarea(attrs={"class":"form-control", "rows":4}),
+            "description": forms.Textarea(attrs={"class":"form-control", "rows":4}),
             "price": forms.NumberInput(attrs={"class":"form-control"}),
             "location": forms.Textarea(attrs={"class":"form-control", "rows":4}),
             "is_public": forms.CheckboxInput(attrs={"class":"form-check-input"}),
