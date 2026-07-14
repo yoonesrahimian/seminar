@@ -6,7 +6,13 @@
 <header class="bg-secondary py-1">
     <div class="container px-4 px-lg-5 my-4">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Seminars</h1>
+            <h1 class="display-4 fw-bolder">
+                {% if current_category %}
+                {{ current_category.name }}
+                {% else %}
+                Seminars
+                {% endif %}
+            </h1>
         </div>
     </div>
 </header>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar
+from core.models import Seminar, Category
 from .forms import NewSeminarForm
 from datetime import datetime, date
 
@@ -63,8 +63,13 @@ def seminar_detail(request, seminar_id):
     return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
 
 def seminar_list(request):
+    category_id = request.GET.get("category")
     seminars = Seminar.objects.all()
-    return render(request, 'core/seminar_list.html', context={'seminars':seminars})
+    current_category = None
+    if category_id:
+        seminars = seminars.filter(category_id=category_id)
+        current_category = Category.objects.get(id=category_id)
+    return render(request, 'core/seminar_list.html', context={"seminars":seminars, "current_category": current_category})
 
 def home(request):
     seminars = Seminar.objects.all().order_by('-id')[:4]
