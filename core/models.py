@@ -12,7 +12,7 @@ class Seminar(models.Model):
     participants = models.ManyToManyField(to='accounts.User', related_name='joined_seminars', blank=True)
     # organizer = models.TextField(null=True)
     title = models.CharField(max_length=50)
-    discription = models.TextField()
+    description = models.TextField()
     price = models.PositiveIntegerField()
     location = models.TextField()
     is_public = models.BooleanField()

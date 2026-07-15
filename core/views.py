@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Seminar, Category
 from .forms import NewSeminarForm
 from datetime import datetime, date
+from django.db.models import Q
 
 def home(request):
     return render(request, 'home.html')
@@ -64,11 +65,14 @@ def seminar_detail(request, seminar_id):
 
 def seminar_list(request):
     category_id = request.GET.get("category")
+    search = request.GET.get("search")
     seminars = Seminar.objects.all()
     current_category = None
     if category_id:
         seminars = seminars.filter(category_id=category_id)
         current_category = Category.objects.get(id=category_id)
+    if search:
+        seminars = seminars.filter(Q(title__icontains=search) | Q(description__icontains=search))
     return render(request, 'core/seminar_list.html', context={"seminars":seminars, "current_category": current_category})
 
 def home(request):
