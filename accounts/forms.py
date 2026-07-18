@@ -29,6 +29,32 @@ class RegisterForm(forms.ModelForm):
 
         return phone
 
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "username", "phone", "email", "address", "country", "city", "profile_picture"]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+        
+
+    def clean_phone(self):
+        phone = self.cleaned_data["phone"]
+
+        if not phone.isdigit():
+            raise forms.ValidationError(
+                "Phone number must contain only digits."
+            )
+
+        if len(phone) != 11:
+            raise forms.ValidationError(
+                "Phone number must be exactly 11 digits."
+            )
+
+        return phone
+
 # class LoginForm(forms.Form):
 #     username = forms.CharField()
 #     password = forms.CharField()

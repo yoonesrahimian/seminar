@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}My Seminars{% endblock %}
+{% block content %}
+    <section class="py-3">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="h2 pb-3">Recent Created Seminars</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 justify-content-center">
+                {% if my_seminars %}
+                {% for seminar in my_seminars reversed %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top"
+                        src="{% if seminar.image %}
+                        {{ seminar.image.url }}
+                        {% else %}
+                        {% static 'images/default_seminar_image.png' %}
+                        {% endif %}"
+                        alt="seminar image" />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ seminar.title }}</h5>
+                                {{ seminar.session_date }}
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                <!-- <a class="btn btn-outline-dark mt-auto" href="{% url 'seminar_detail' seminar.id %}">View Seminar</a> -->
+                                <a href="{% url 'edit_seminar' seminar.id %}" class="btn btn-outline-warning flex-shrink-0 d-block mb-2">Edit</a>
+                                <a href="{% url 'delete_seminar' seminar.id %}" class="btn btn-outline-danger flex-shrink-0 d-block">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <h4 class="alert alert-warning text-center">No Seminar</h4>
+            {% endif %}
+        </div>
+    </section>
+    {% endblock %}

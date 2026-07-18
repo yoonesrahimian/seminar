@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from accounts.models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, EditUserForm
 from django.contrib.auth.forms import AuthenticationForm
 
 # def register(request):
@@ -52,6 +52,22 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, "accounts/register.html", {"form": form})
+
+def edit_user(request):
+    user = request.user
+    if request.method == "POST":
+        form = EditUserForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard:profile")
+    else:
+        form = EditUserForm(instance=user)
+    return render(request, "accounts/edit_user.html", context={"form": form, "user": user})
+
+def delete_user(request):
+    user = request.user
+    user.delete()
+    return redirect("home")
 
 def login_view(request):
     errors = {}
