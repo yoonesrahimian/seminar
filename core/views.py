@@ -4,6 +4,7 @@ from core.models import Seminar, Category
 from .forms import NewSeminarForm
 from datetime import datetime, date
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 def home(request):
     return render(request, 'home.html')
@@ -64,6 +65,8 @@ def seminar_detail(request, seminar_id):
     return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
 
 def seminar_list(request):
+    query_params = request.GET.copy()
+    query_params.pop("page", None)
     category_id = request.GET.get("category")
     search = request.GET.get("search")
     seminars = Seminar.objects.all()
@@ -73,7 +76,10 @@ def seminar_list(request):
         current_category = Category.objects.get(id=category_id)
     if search:
         seminars = seminars.filter(Q(title__icontains=search) | Q(description__icontains=search))
-    return render(request, 'core/seminar_list.html', context={"seminars":seminars, "current_category": current_category})
+    paginator = Paginator(seminars, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'core/seminar_list.html', context={"page_obj":page_obj, "current_category": current_category, "query_params": query_params.urlencode()})
 
 def home(request):
     seminars = Seminar.objects.order_by('-created_at')[:4]
