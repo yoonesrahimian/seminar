@@ -25,6 +25,7 @@ class Seminar(models.Model):
     # Platform
     # hashtag = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="seminars")
+    created_at = models.DateTimeField(auto_now_add=True)
     # discount_code
     # is_course
 

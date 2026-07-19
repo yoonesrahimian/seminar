@@ -1,0 +1,27 @@
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from accounts.models import User
+from core.models import Seminar
+
+@login_required
+def dashboard(request):
+    my_seminars = Seminar.objects.filter(teacher=request.user).order_by("-created_at")[:3]
+    joined_seminars = Seminar.objects.filter(participants=request.user).order_by("-created_at")[:3]
+    return render(request, "dashboard/dashboard.html", context={"my_seminars":my_seminars, "joined_seminars":joined_seminars})
+
+def my_seminars(request):
+    my_seminars = Seminar.objects.filter(teacher=request.user).order_by("-created_at")
+    return render(request, "dashboard/my_seminars.html", context={"my_seminars": my_seminars})
+
+def joined_seminars(request):
+    joined_seminars = Seminar.objects.filter(participants=request.user).order_by("-created_at")
+    return render(request, "dashboard/joined_seminars.html", context={"joined_seminars": joined_seminars})
+
+def profile(request):
+    user = request.user
+    return render(request, "dashboard/profile.html", context={"user":user})
+
+# @login_required
+# def edit_profile(request):
+    
+#     return render(request, "dashboard/edit_profile.html", context={"user": user})

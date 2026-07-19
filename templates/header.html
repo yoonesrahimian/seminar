@@ -35,6 +35,7 @@
   </div>
 </header> -->
 
+{% load static %}
 <header class="p-3">
   <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start p-3 mb-4 border-bottom">
     <a href="{% url 'home' %}" class="text-black text-decoration-none border-end pe-2 border-2 border-info-subtle"><span class="fs-4">Seminar</span></a>
@@ -68,8 +69,32 @@
     </form>
     <div class="text-end">
       {% if user.is_authenticated %}
-      <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Logout</a>
-      <a class="nav-item text-decoration-none">{{ user.username }}</a>
+      <div class="d-flex">
+      <div class="dropdown">
+          <a
+            href="#"
+            class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images\default_profile_picture.jpg' %}{% endif %}"
+              alt=""
+              width="32"
+              height="32"
+              class="rounded-circle object-fit-cover me-2"
+            />
+            <strong>{{ request.user.first_name }}</strong>
+          </a>
+          <ul class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+            <li><a class="dropdown-item" href="{% url 'new_seminar' %}">New Seminar...</a></li>
+            <li><a class="dropdown-item" href="{% url 'dashboard:profile' %}">Profile</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
+          </ul>
+      </div>
+      </div>
       {% else %}
       <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
       <a href="{% url 'register' %}" class="btn btn-primary">Sign-up</a>

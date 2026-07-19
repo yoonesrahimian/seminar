@@ -76,7 +76,7 @@ def seminar_list(request):
     return render(request, 'core/seminar_list.html', context={"seminars":seminars, "current_category": current_category})
 
 def home(request):
-    seminars = Seminar.objects.all().order_by('-id')[:4]
+    seminars = Seminar.objects.order_by('-created_at')[:4]
     return render(request, 'core/home.html', context={'seminars':seminars})
 
 def edit_seminar(request, seminar_id):
