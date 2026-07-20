@@ -16,11 +16,26 @@
         </div>
     </div>
 </header>
-<section class="py-5">
+<section>
     <div class="container px-4 px-lg-5 mt-5">
+        <form class="mb-4" action="{% url 'seminar_list' %}" method="get">
+            {% if request.GET.search %}
+            <input type="hidden" name="search" value="{{ request.GET.search }}">
+            {% endif %}
+            
+            {% if request.GET.category %}
+            <input type="hidden" name="category" value="{{ request.GET.category }}">
+            {% endif %}
+            <select name="sort" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest</option>
+            <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest</option>
+            <option value="price_high" {% if sort == "price_high" %}selected{% endif %}>Price: High To Low</option>
+            <option value="price_low" {% if sort == "price_low" %}selected{% endif %}>Price: Low To High</option>
+            </select>
+        </form>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% if page_obj %}
-            {% for seminar in page_obj reversed %}
+            {% for seminar in page_obj %}
             <div class="col mb-5">
                 <div class="card h-100">
                     <img class="card-img-top"

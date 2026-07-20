@@ -71,15 +71,27 @@ def seminar_list(request):
     search = request.GET.get("search")
     seminars = Seminar.objects.all()
     current_category = None
+
+    SORT_OPTION = {
+        "newest": "-created_at",
+        "oldest": "created_at",
+        "price_high": "-price",
+        "price_low": "price",
+    }
+
     if category_id:
         seminars = seminars.filter(category_id=category_id)
         current_category = Category.objects.get(id=category_id)
     if search:
         seminars = seminars.filter(Q(title__icontains=search) | Q(description__icontains=search))
+    
+    sort = request.GET.get("sort", "newest")
+    seminars = seminars.order_by(SORT_OPTION.get(sort, "-created_at"))
+
     paginator = Paginator(seminars, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'core/seminar_list.html', context={"page_obj":page_obj, "current_category": current_category, "query_params": query_params.urlencode()})
+    return render(request, 'core/seminar_list.html', context={"page_obj":page_obj, "current_category": current_category, "query_params": query_params.urlencode(), "sort": sort})
 
 def home(request):
     seminars = Seminar.objects.order_by('-created_at')[:4]
