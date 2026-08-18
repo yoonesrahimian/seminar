@@ -5,7 +5,7 @@ class NewSeminarForm(forms.ModelForm):
 
     class Meta:
         model = Seminar
-        exclude = ["teacher", "participants"]
+        exclude = ['teacher', 'participants', 'is_deleted']
         widgets = {
             "title": forms.TextInput(attrs={"class":"form-control"}),
             "description": forms.Textarea(attrs={"class":"form-control", "rows":4}),

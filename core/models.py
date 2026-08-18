@@ -28,6 +28,7 @@ class Seminar(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # discount_code
     # is_course
+    is_deleted = models.BooleanField(default=False)
 
     @property
     def status(self):
@@ -52,6 +53,9 @@ class Seminar(models.Model):
 
         progress = (now - start) / (end - start) * 100
         return int(progress)
+
+    def __str__(self):
+        return self.title
 
 # class Session(models.Model):
 #     seminar = models.ForeignKey(to='core.Seminar', on_delete=models.CASCADE)

@@ -6,9 +6,6 @@ from datetime import datetime, date
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-def home(request):
-    return render(request, 'home.html')
-
 # @login_required()
 # def new_seminar(request):
 #     errors = {}
@@ -86,7 +83,7 @@ def seminar_list(request):
         seminars = seminars.filter(Q(title__icontains=search) | Q(description__icontains=search))
     
     sort = request.GET.get("sort", "newest")
-    seminars = seminars.order_by(SORT_OPTION.get(sort, "-created_at"))
+    seminars = seminars.filter(is_deleted=False).order_by(SORT_OPTION.get(sort, "-created_at"))
 
     paginator = Paginator(seminars, 12)
     page_number = request.GET.get("page")
@@ -94,7 +91,7 @@ def seminar_list(request):
     return render(request, 'core/seminar_list.html', context={"page_obj":page_obj, "current_category": current_category, "query_params": query_params.urlencode(), "sort": sort})
 
 def home(request):
-    seminars = Seminar.objects.order_by('-created_at')[:4]
+    seminars = Seminar.objects.filter(is_deleted=False).order_by('-created_at')[:4]
     return render(request, 'core/home.html', context={'seminars':seminars})
 
 def edit_seminar(request, seminar_id):
@@ -123,5 +120,5 @@ def edit_seminar(request, seminar_id):
     return render(request, 'core/edit_seminar.html', context={'form':form, 'seminar':seminar})
 
 def delete_seminar(request, seminar_id):
-    Seminar.objects.filter(id=seminar_id).delete()
+    Seminar.objects.filter(id=seminar_id).update(is_deleted=True)
     return redirect('seminar_list')
