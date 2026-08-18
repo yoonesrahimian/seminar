@@ -36,26 +36,11 @@
 </header> -->
 
 {% load static %}
-<header class="p-3">
-  <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start p-3 mb-4 border-bottom">
-    <a href="{% url 'home' %}" class="text-black text-decoration-none border-end pe-2 border-2 border-info-subtle"><span class="fs-4">Seminar</span></a>
-    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="{% url 'home' %}" class="nav-link px-2">Home</a></li>
-      <li><a href="{% url 'new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
-      <li><a href="{% url 'seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
-      <li>
-        <div class="dropdown">
-          <a class="nav-link px-2 dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-
-          <ul class="dropdown-menu">
-            {% for category in categories %}
-            <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-      </li>
-    </ul>
-    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get" action="{% url 'seminar_list' %}">
+<nav class="navbar navbar-expand-sm">
+  <div class="mx-auto">
+  <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom">
+    <a href="{% url 'home' %}" class="navbar-brand pe-3 order-2 order-sm-2 order-lg-first"><span class="fs-4">Seminar</span></a>
+    <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'seminar_list' %}">
       <div class="input-group">
         <input name="search" type="text" class="form-control w-25" placeholder="Search..." value="{{ request.GET.search }}">
         <select name="category" class="form-select">
@@ -67,7 +52,7 @@
         <button class="btn btn-primary" type="submit">Search</button>
       </div>
     </form>
-    <div class="text-end">
+    <div class="text-end order-1 order-sm-1 order-lg-last">
       {% if user.is_authenticated %}
       <div class="d-flex">
       <div class="dropdown">
@@ -100,5 +85,27 @@
       <a href="{% url 'register' %}" class="btn btn-primary">Sign-up</a>
       {% endif %}
     </div>
+    <button class="navbar-toggler order-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 order-last">
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link text-primary px-2">Home</a></li>
+        <li class="nav-item"><a href="{% url 'new_seminar' %}" class="nav-link text-primary px-2">Create Seminar</a></li>
+        <li class="nav-item"><a href="{% url 'seminar_list' %}" class="nav-link text-primary px-2">Seminar List</a></li>
+        <li class="nav-item">
+          <div class="dropdown">
+            <a class="nav-link px-2 text-primary dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+            
+            <ul class="dropdown-menu">
+              {% for category in categories %}
+              <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-</header>
+  </div>
+</nav>
