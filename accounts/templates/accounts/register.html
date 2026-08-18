@@ -14,7 +14,7 @@
     <form action="{% url 'register' %}" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     <!-- {{ form }} -->
-    {% for field in form %}
+    <!-- {% for field in form %}
     {{ field.label_tag }}
     {{ field }}
     {% for error in field.errors %}
@@ -22,9 +22,37 @@
       {{ error }}
     </div>
     {% endfor %}
-    {% endfor %}
+    {% endfor %} -->
+
+    {% include 'components/form_field.html' with field=form.first_name %}
+    {% include 'components/form_field.html' with field=form.last_name %}
+    {% include 'components/form_field.html' with field=form.username %}
+    {% include 'components/password_field.html' with field=form.password %}
+    {% include 'components/form_field.html' with field=form.phone %}
+    {% include 'components/form_field.html' with field=form.email %}
+    {% include 'components/form_field.html' with field=form.address %}
+    {% include 'components/form_field.html' with field=form.country %}
+    {% include 'components/form_field.html' with field=form.city %}
+    {% include 'components/form_field.html' with field=form.profile_picture %}
     <button type="submit" class="btn btn-primary w-100 btn-lg mt-4">Submit</button>
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.getElementById("toggle-password");
+
+    toggleButton.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            this.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            this.textContent = "Show";
+        }
+    });
+</script>
 {% endblock %}

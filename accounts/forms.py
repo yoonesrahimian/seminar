@@ -7,6 +7,10 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "username", "password", "phone", "email", "address", "country", "city", "profile_picture"]
+        widgets = {
+            'username': forms.TextInput(attrs={'autocomplete': 'off'}),
+            'password': forms.PasswordInput(attrs={'id': 'password', 'autocomplete': 'off'}),
+        }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
