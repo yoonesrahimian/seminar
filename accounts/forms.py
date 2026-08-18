@@ -12,6 +12,10 @@ class RegisterForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+        if self.is_bound:
+            for name, field in self.fields.items():
+                if self.errors.get(name):
+                    field.widget.attrs['class'] += ' is-invalid'
         
 
     def clean_phone(self):
@@ -38,6 +42,10 @@ class EditUserForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+        if self.is_bound:
+            for name, field in self.fields.items():
+                if self.errors.get(name):
+                    field.widget.attrs['class'] += ' is-invalid'
         
 
     def clean_phone(self):

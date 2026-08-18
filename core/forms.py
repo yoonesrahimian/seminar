@@ -2,6 +2,7 @@ from django import forms
 from .models import Seminar
 
 class NewSeminarForm(forms.ModelForm):
+
     class Meta:
         model = Seminar
         exclude = ["teacher", "participants"]
@@ -17,3 +18,11 @@ class NewSeminarForm(forms.ModelForm):
             "session_time_end": forms.TimeInput(attrs={"class":"form-control", "type":"time"}),
             "image": forms.FileInput(attrs={"class":"form-control"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.is_bound:
+            for name in self.fields:
+                if self.errors.get(name):
+                    current_class = self.fields[name].widget.attrs.get("class", "")
+                    self.fields[name].widget.attrs["class"] = (f"{current_class} is-invalid").strip()
