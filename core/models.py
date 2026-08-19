@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -17,9 +18,8 @@ class Seminar(models.Model):
     location = models.TextField()
     is_public = models.BooleanField()
     is_inperson = models.BooleanField()
-    session_date = models.DateField()
-    session_time_start = models.TimeField()
-    session_time_end = models.TimeField()
+    session_start = models.DateTimeField()
+    session_end = models.DateTimeField()
     image = models.ImageField(upload_to='seminar_image/', blank=True)
     # max_particiant = models.CharField(max_length=7)
     # Platform
@@ -32,24 +32,22 @@ class Seminar(models.Model):
 
     @property
     def status(self):
-        today = datetime.now().today()
-        now = datetime.combine(today, datetime.now().time().replace(microsecond=0))
-        start = datetime.combine(today, self.session_time_start)
-        end = datetime.combine(today, self.session_time_end)
+        now = timezone.now()
+        start = self.session_start
+        end = self.session_end
 
-        if now < start:
-            return "upcoming"
-        elif now >= end:
+        if now >= end:
             return "completed"
+        elif now < start:
+            return "upcoming"
         else:
             return "inprogress"
 
     @property
     def progress(self):
-        today = datetime.now().today()
-        now = datetime.combine(today, datetime.now().time().replace(microsecond=0))
-        start = datetime.combine(today, self.session_time_start)
-        end = datetime.combine(today, self.session_time_end)
+        now = timezone.now()
+        start = self.session_start
+        end = self.session_end
 
         progress = (now - start) / (end - start) * 100
         return int(progress)
