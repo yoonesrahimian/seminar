@@ -8,6 +8,7 @@
 <div class="container">
 <form action="{% url 'login' %}" method="POST">
   {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% for field in form %}
   <div class="mb-3">
     {{ field.label }}
