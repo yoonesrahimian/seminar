@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 from django.utils import timezone
 
 class Category(models.Model):
@@ -23,8 +22,8 @@ class Seminar(models.Model):
     image = models.ImageField(upload_to='seminar_image/', blank=True)
     # max_particiant = models.CharField(max_length=7)
     # Platform
-    # hashtag = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="seminars")
+    # tag = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='seminars')
     created_at = models.DateTimeField(auto_now_add=True)
     # discount_code
     # is_course
@@ -37,11 +36,11 @@ class Seminar(models.Model):
         end = self.session_end
 
         if now >= end:
-            return "completed"
+            return 'completed'
         elif now < start:
-            return "upcoming"
+            return 'upcoming'
         else:
-            return "inprogress"
+            return 'inprogress'
 
     @property
     def progress(self):

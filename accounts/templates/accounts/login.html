@@ -6,7 +6,7 @@
 <div class="container border col-9 col-md-6 col-lg-3 rounded p-3">
 <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
 <div class="container">
-<form action="{% url 'login' %}" method="POST">
+<form action="{% url 'accounts:login' %}" method="POST">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% for field in form %}

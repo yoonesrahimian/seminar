@@ -10,7 +10,7 @@
       {% if seminar.image %}
       <img class="d-block mx-auto img-fluid w-50" src="{{ seminar.image.url }}">
       {% endif %}
-        <form action="{% url 'edit_seminar' seminar.id %}" method="post" enctype="multipart/form-data" novalidate>
+        <form action="{% url 'core:edit_seminar' seminar.id %}" method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             {% for field in form %}
             <div class="mb-2">

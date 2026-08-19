@@ -3,15 +3,15 @@
     <a href="{% url 'home' %}" class="text-black text-decoration-none border-end pe-2 border-2 border-info-subtle"><span class="fs-4">Seminar</span></a>
     <ul class="nav mb-2 justify-content-center mb-md-0">
       <li><a href="{% url 'home' %}" class="nav-link px-2">Home</a></li>
-      <li><a href="{% url 'new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
-      <li><a href="{% url 'seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
+      <li><a href="{% url 'core:new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
+      <li><a href="{% url 'core:seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
       <li>
         <div class="dropdown">
           <a class="nav-link px-2 dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
 
           <ul class="dropdown-menu">
             {% for category in categories %}
-            <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
+            <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'core:seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
             {% endfor %}
           </ul>
       </div>
@@ -25,11 +25,11 @@
 </div>
     <div class="">
       {% if user.is_authenticated %}
-      <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Logout</a>
+      <a href="{% url 'accounts:logout' %}" class="btn btn-outline-primary me-2">Logout</a>
       <a class="nav-item">{{ user.username }}</a>
       {% else %}
-      <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
-      <a href="{% url 'register' %}" class="btn btn-primary">Sign-up</a>
+      <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">Login</a>
+      <a href="{% url 'accounts:register' %}" class="btn btn-primary">Sign-up</a>
       {% endif %}
     </div>
   </div>
@@ -40,7 +40,7 @@
   <div class="mx-auto">
   <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom">
     <a href="{% url 'home' %}" class="navbar-brand pe-3 order-2 order-sm-2 order-lg-first"><span class="fs-4">Seminar</span></a>
-    <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'seminar_list' %}">
+    <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'core:seminar_list' %}">
       <div class="input-group">
         <input name="search" type="text" class="form-control w-25" placeholder="Search..." value="{{ request.GET.search }}">
         <select name="category" class="form-select">
@@ -73,16 +73,16 @@
           </a>
           <ul class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
-            <li><a class="dropdown-item" href="{% url 'new_seminar' %}">New Seminar...</a></li>
+            <li><a class="dropdown-item" href="{% url 'core:new_seminar' %}">New Seminar...</a></li>
             <li><a class="dropdown-item" href="{% url 'dashboard:profile' %}">Profile</a></li>
             <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
+            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
           </ul>
       </div>
       </div>
       {% else %}
-      <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
-      <a href="{% url 'register' %}" class="btn btn-primary">Sign-up</a>
+      <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary me-2">Login</a>
+      <a href="{% url 'accounts:register' %}" class="btn btn-primary">Sign-up</a>
       {% endif %}
     </div>
     <button class="navbar-toggler order-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,15 +91,15 @@
     <div class="collapse navbar-collapse" id="navbarMenu">
       <ul class="navbar-nav ms-auto col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 order-last">
         <li class="nav-item"><a href="{% url 'home' %}" class="nav-link text-primary px-2">Home</a></li>
-        <li class="nav-item"><a href="{% url 'new_seminar' %}" class="nav-link text-primary px-2">Create Seminar</a></li>
-        <li class="nav-item"><a href="{% url 'seminar_list' %}" class="nav-link text-primary px-2">Seminar List</a></li>
+        <li class="nav-item"><a href="{% url 'core:new_seminar' %}" class="nav-link text-primary px-2">Create Seminar</a></li>
+        <li class="nav-item"><a href="{% url 'core:seminar_list' %}" class="nav-link text-primary px-2">Seminar List</a></li>
         <li class="nav-item">
           <div class="dropdown">
             <a class="nav-link px-2 text-primary dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
             
             <ul class="dropdown-menu">
               {% for category in categories %}
-              <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
+              <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'core:seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
               {% endfor %}
             </ul>
           </div>

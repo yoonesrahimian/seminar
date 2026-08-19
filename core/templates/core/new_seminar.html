@@ -10,7 +10,7 @@
           </p>
     </div>
     <div class="col-md-7 col-lg-8 mx-auto">
-        <form action="{% url 'new_seminar' %}" method="post" enctype="multipart/form-data" novalidate>
+        <form action="{% url 'core:new_seminar' %}" method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             {% for field in form %}
             <div class="mb-2">

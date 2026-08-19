@@ -2,42 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar, Category
 from .forms import NewSeminarForm
-from datetime import datetime, date
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-# @login_required()
-# def new_seminar(request):
-#     errors = {}
-#     if request.method == 'POST':
-#         title = request.POST.get('title')
-#         discription = request.POST.get('discription')
-#         location = request.POST.get('location')
-#         price = request.POST.get('price')
-#         session_date = request.POST.get('session_date')
-#         session_time_start = request.POST.get('session_time_start')
-#         session_time_end = request.POST.get('session_time_end')
-#         is_public = request.POST.get('is_public') == 'true'
-#         is_inperson = request.POST.get('is_inperson') == 'true'
-#         image = request.FILES.get('image')
-#         teacher = request.user
-#         Seminar.objects.create(
-#             title=title,
-#             discription=discription,
-#             location=location,
-#             price=price,
-#             is_public=is_public,
-#             is_inperson=is_inperson,
-#             image=image,
-#             teacher=teacher,
-#             session_date=session_date,
-#             session_time_start=session_time_start,
-#             session_time_end=session_time_end,
-#         )
-#         return redirect('seminar_list')
-#     return render(request, 'core/new_seminar.html')
-
-@login_required()
+@login_required
 def new_seminar(request):
     if request.method == 'POST':
         form = NewSeminarForm(request.POST, request.FILES)
@@ -45,7 +13,7 @@ def new_seminar(request):
             seminar = form.save(commit=False)
             seminar.teacher = request.user
             form.save()
-            return redirect('seminar_list')
+            return redirect('core:seminar_list')
     else:
         form = NewSeminarForm()
     return render(request, 'core/new_seminar.html', context={'form':form})
@@ -56,9 +24,9 @@ def seminar_detail(request, seminar_id):
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            return redirect('login')
+            return redirect('accounts:login')
         seminar.participants.add(request.user)
-        return redirect('seminar_detail', seminar_id=seminar_id)
+        return redirect('core:seminar_detail', seminar_id=seminar_id)
     return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
 
 def seminar_list(request):
@@ -70,10 +38,10 @@ def seminar_list(request):
     current_category = None
 
     SORT_OPTION = {
-        "newest": "-created_at",
-        "oldest": "created_at",
-        "price_high": "-price",
-        "price_low": "price",
+        'newest': '-created_at',
+        'oldest': 'created_at',
+        'price_high': '-price',
+        'price_low': 'price',
     }
 
     if category_id:
@@ -82,13 +50,13 @@ def seminar_list(request):
     if search:
         seminars = seminars.filter(Q(title__icontains=search) | Q(description__icontains=search))
     
-    sort = request.GET.get("sort", "newest")
-    seminars = seminars.filter(is_deleted=False).order_by(SORT_OPTION.get(sort, "-created_at"))
+    sort = request.GET.get('sort', 'newest')
+    seminars = seminars.filter(is_deleted=False).order_by(SORT_OPTION.get(sort, '-created_at'))
 
     paginator = Paginator(seminars, 12)
-    page_number = request.GET.get("page")
+    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'core/seminar_list.html', context={"page_obj":page_obj, "current_category": current_category, "query_params": query_params.urlencode(), "sort": sort})
+    return render(request, 'core/seminar_list.html', context={'page_obj':page_obj, 'current_category': current_category, 'query_params': query_params.urlencode(), 'sort': sort})
 
 def home(request):
     seminars = Seminar.objects.filter(is_deleted=False).order_by('-created_at')[:4]
@@ -96,26 +64,12 @@ def home(request):
 
 @login_required
 def edit_seminar(request, seminar_id):
-    # seminar = Seminar.objects.filter(id=seminar_id).first()
     seminar = Seminar.objects.get(pk=seminar_id)
     if request.method == 'POST':
         form = NewSeminarForm(request.POST, request.FILES, instance=seminar)
         if form.is_valid():
             form.save()
-        # seminar.title = request.POST.get('title')
-        # seminar.discription = request.POST.get('discription')
-        # seminar.location = request.POST.get('location')
-        # seminar.price = request.POST.get('price')
-        # seminar.session_date = request.POST.get('session_date')
-        # seminar.session_time_start = request.POST.get('session_time_start')
-        # seminar.session_time_end = request.POST.get('session_time_end')
-        # seminar.is_public = request.POST.get('is_public') == 'true'
-        # seminar.is_inperson = request.POST.get('is_inperson') == 'true'
-        # seminar.image = request.FILES.get('image')
-        # seminar.teacher = request.user
-        # seminar.participant = '{}'
-        # seminar.save()
-        return redirect('seminar_detail', seminar_id=seminar.id)
+        return redirect('core:seminar_detail', seminar_id=seminar.id)
     else:
         form = NewSeminarForm(instance=seminar)
     return render(request, 'core/edit_seminar.html', context={'form':form, 'seminar':seminar})
@@ -123,4 +77,4 @@ def edit_seminar(request, seminar_id):
 @login_required
 def delete_seminar(request, seminar_id):
     Seminar.objects.filter(id=seminar_id).update(is_deleted=True)
-    return redirect('seminar_list')
+    return redirect('core:seminar_list')

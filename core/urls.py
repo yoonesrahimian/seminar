@@ -1,6 +1,8 @@
 from django.urls import path
 from core.views import new_seminar, seminar_detail, seminar_list, edit_seminar, delete_seminar
 
+app_name = 'core'
+
 urlpatterns = [
     path('new_seminar/', new_seminar, name='new_seminar'),
     path('seminar_detail/<seminar_id>/', seminar_detail, name='seminar_detail'),

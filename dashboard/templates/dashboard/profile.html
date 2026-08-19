@@ -22,7 +22,7 @@
                 <p class="lead">City: {{ user.city }}</p>
                 <p class="lead">Address: {{ user.address }}</p>
                 <div class="d-flex">
-                    <a href="{% url 'edit_user' %}" class="btn btn-outline-warning flex-shrink-0 me-4">Edit Profile</a>
+                    <a href="{% url 'accounts:edit_user' %}" class="btn btn-outline-warning flex-shrink-0 me-4">Edit Profile</a>
                     <button type="button" class="btn btn-outline-danger me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Account</button>
                     <!-- Modal -->
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -37,7 +37,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                            <a href="{% url 'delete_user' %}" class="btn btn-danger flex-shrink-0 ">Delete Account</a>
+                            <a href="{% url 'accounts:delete_user' %}" class="btn btn-danger flex-shrink-0 ">Delete Account</a>
                         </div>
                         </div>
                     </div>

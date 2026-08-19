@@ -26,8 +26,8 @@
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center">
-                                <!-- <a class="btn btn-outline-dark mt-auto" href="{% url 'seminar_detail' seminar.id %}">View Seminar</a> -->
-                                <a href="{% url 'edit_seminar' seminar.id %}" class="btn btn-outline-warning flex-shrink-0 d-block mb-2">Edit</a>
+                                <!-- <a class="btn btn-outline-dark mt-auto" href="{% url 'core:seminar_detail' seminar.id %}">View Seminar</a> -->
+                                <a href="{% url 'core:edit_seminar' seminar.id %}" class="btn btn-outline-warning flex-shrink-0 d-block mb-2">Edit</a>
                                 <button type="button" class="btn btn-outline-danger w-100 d-block" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                                        <a href="{% url 'delete_seminar' seminar.id %}" class="btn btn-danger">Delete</a>
+                                        <a href="{% url 'core:delete_seminar' seminar.id %}" class="btn btn-danger">Delete</a>
                                     </div>
                                     </div>
                                 </div>
