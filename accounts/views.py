@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm, EditUserForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.contrib.auth.decorators import login_required
 
 # def register(request):
 #     errors = {}
@@ -54,6 +55,7 @@ def register(request):
         form = RegisterForm()
     return render(request, "accounts/register.html", {"form": form})
 
+@login_required
 def edit_user(request):
     user = request.user
     if request.method == "POST":
@@ -65,6 +67,7 @@ def edit_user(request):
         form = EditUserForm(instance=user)
     return render(request, "accounts/edit_user.html", context={"form": form, "user": user})
 
+@login_required
 def delete_user(request):
     user = request.user
     user.delete()
@@ -94,6 +97,7 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'accounts/login.html', context={'form':form})
 
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('login')

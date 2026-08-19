@@ -94,6 +94,7 @@ def home(request):
     seminars = Seminar.objects.filter(is_deleted=False).order_by('-created_at')[:4]
     return render(request, 'core/home.html', context={'seminars':seminars})
 
+@login_required
 def edit_seminar(request, seminar_id):
     # seminar = Seminar.objects.filter(id=seminar_id).first()
     seminar = Seminar.objects.get(pk=seminar_id)
@@ -119,6 +120,7 @@ def edit_seminar(request, seminar_id):
         form = NewSeminarForm(instance=seminar)
     return render(request, 'core/edit_seminar.html', context={'form':form, 'seminar':seminar})
 
+@login_required
 def delete_seminar(request, seminar_id):
     Seminar.objects.filter(id=seminar_id).update(is_deleted=True)
     return redirect('seminar_list')
