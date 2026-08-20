@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'dashboard.apps.DashboardConfig',
     'django_bootstrap5',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

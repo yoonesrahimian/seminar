@@ -8,7 +8,7 @@ class NewSeminarForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
-            'price': forms.NumberInput(attrs={'class':'form-control'}),
+            'price': forms.TextInput(attrs={'class':'form-control'}),
             'location': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
             'is_public': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'is_inperson': forms.CheckboxInput(attrs={'class':'form-check-input'}),
@@ -30,7 +30,7 @@ class NewSeminarForm(forms.ModelForm):
         data = super().clean()
         session_start = data.get('session_start')
         session_end = data.get('session_end')
-        if session_end <= session_start:
+        if session_start and session_end and session_end <= session_start:
             self.add_error('session_start', '')
             self.add_error('session_end', 'session end must be greater than session start.')
         return data

@@ -1,0 +1,12 @@
+<div class="mb-3">
+    {{ field.label_tag }}
+    <div class="input-group">
+        {{ field }}
+        <span class="input-group-text">Toman</span>
+    </div>
+    {% if field.errors %}
+    <div class="invalid-feedback d-block">
+        {{ field.errors.0 }}
+    </div>
+    {% endif %}
+</div>

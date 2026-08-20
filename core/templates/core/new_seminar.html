@@ -12,7 +12,7 @@
     <div class="col-md-7 col-lg-8 mx-auto">
         <form action="{% url 'core:new_seminar' %}" method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
-            {% for field in form %}
+            <!-- {% for field in form %}
             <div class="mb-2">
                 {{ field.label }}
                 {{ field }}
@@ -22,10 +22,40 @@
                     </div>
                 {% endfor %}
             </div>
-            {% endfor %}
+            {% endfor %} -->
+            
+            {% include 'components/form_field.html' with field=form.title %}
+            {% include 'components/form_field.html' with field=form.description %}
+            {% include 'components/price_field.html' with field=form.price %}
+            {% include 'components/form_field.html' with field=form.location %}
+            {% include 'components/form_field.html' with field=form.is_public %}
+            {% include 'components/form_field.html' with field=form.is_inperson %}
+            {% include 'components/form_field.html' with field=form.session_start %}
+            {% include 'components/form_field.html' with field=form.session_end %}
+            {% include 'components/form_field.html' with field=form.image %}
+            {% include 'components/form_field.html' with field=form.category %}
 
             <button type="submit" class="btn btn-primary w-100 mt-4">Create</button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const price = document.getElementById("id_price");
+    const form = price.closest("form")
+    function formatPrice() {
+        let value = price.value.replace(/,/g, "");
+        if (value !== "") {
+            price.value = Number(value).toLocaleString("en-US");
+        }
+    }
+    price.addEventListener("input", formatPrice);
+    formatPrice();
+
+    form.addEventListener("submit", function () {
+        price.value = price.value.replace(/,/g, "");
+    });
+</script>
 {% endblock %}
