@@ -16,11 +16,11 @@
             <div class="col-md-6">
                 <h1 class="display-5 fw-bolder">{{ user.first_name }} {{ user.last_name }}</h1>
                 <p class="lead">Username: {{ user.username }}</p>
-                <p class="lead">Email: {{ user.email }}</p>
                 <p class="lead">Phone: {{ user.phone }}</p>
-                <p class="lead">Country: {{ user.country }}</p>
-                <p class="lead">City: {{ user.city }}</p>
-                <p class="lead">Address: {{ user.address }}</p>
+                {% if user.email %}<p class="lead">Email: {{ user.email }}</p>{% endif %}
+                {% if user.country %}<p class="lead">Country: {{ user.get_country_display }}</p>{% endif %}
+                {% if user.city %}<p class="lead">City: {{ user.get_city_display }}</p>{% endif %}
+                {% if user.address %}<p class="lead">Address: {{ user.address }}</p>{% endif %}
                 <div class="d-flex">
                     <a href="{% url 'accounts:edit_user' %}" class="btn btn-outline-warning flex-shrink-0 me-4">Edit Profile</a>
                     <button type="button" class="btn btn-outline-danger me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Account</button>
