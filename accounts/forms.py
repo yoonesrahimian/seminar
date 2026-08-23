@@ -57,5 +57,5 @@ class EditUserForm(forms.ModelForm):
         return phone
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control form-control-lg'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'autocomplete': 'off'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control form-control-lg', 'id': 'password', 'autocomplete': 'off'}))

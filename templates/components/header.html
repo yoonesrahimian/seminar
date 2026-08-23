@@ -1,44 +1,6 @@
-<!-- <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between p-3 mb-4 border-bottom">
-  <div class="d-flex">
-    <a href="{% url 'home' %}" class="text-black text-decoration-none border-end pe-2 border-2 border-info-subtle"><span class="fs-4">Seminar</span></a>
-    <ul class="nav mb-2 justify-content-center mb-md-0">
-      <li><a href="{% url 'home' %}" class="nav-link px-2">Home</a></li>
-      <li><a href="{% url 'core:new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
-      <li><a href="{% url 'core:seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
-      <li>
-        <div class="dropdown">
-          <a class="nav-link px-2 dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-
-          <ul class="dropdown-menu">
-            {% for category in categories %}
-            <li><a class="dropdown-item {% if current_category.id == category.id %}active{% endif %}" href="{% url 'core:seminar_list' %}?category={{ category.id }}">{{ category.name }}</a></li>
-            {% endfor %}
-          </ul>
-      </div>
-      </li>
-    </ul>
-  </div>
-  <div class="d-flex text-end">
-    <div class="input-group mb-3">
-  <input type="text" class="form-control" placeholder="Recipient’s username" aria-label="Recipient’s username" aria-describedby="button-addon2">
-  <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
-</div>
-    <div class="">
-      {% if user.is_authenticated %}
-      <a href="{% url 'accounts:logout' %}" class="btn btn-outline-primary me-2">Logout</a>
-      <a class="nav-item">{{ user.username }}</a>
-      {% else %}
-      <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary">Login</a>
-      <a href="{% url 'accounts:register' %}" class="btn btn-primary">Sign-up</a>
-      {% endif %}
-    </div>
-  </div>
-</header> -->
-
 {% load static %}
 <nav class="navbar navbar-expand-sm">
-  <div class="mx-auto">
-  <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom">
+  <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom mx-auto">
     <a href="{% url 'home' %}" class="navbar-brand pe-3 order-2 order-sm-2 order-lg-first"><span class="fs-4">Seminar</span></a>
     <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'core:seminar_list' %}">
       <div class="input-group">
@@ -56,19 +18,10 @@
       {% if user.is_authenticated %}
       <div class="d-flex">
       <div class="dropdown">
-          <a
-            href="#"
-            class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+          <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img
               src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}{% static 'images\default_profile_picture.jpg' %}{% endif %}"
-              alt=""
-              width="32"
-              height="32"
-              class="rounded-circle object-fit-cover me-2"
-            />
+              width="32" height="32" class="rounded-circle object-fit-cover me-2">
             <strong>{{ request.user.first_name }}</strong>
           </a>
           <ul class="dropdown-menu text-small shadow">
@@ -106,6 +59,5 @@
         </li>
       </ul>
     </div>
-  </div>
   </div>
 </nav>

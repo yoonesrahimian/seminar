@@ -6,22 +6,40 @@
 <div class="container border col-9 col-md-6 col-lg-3 rounded p-3">
 <h1 class="h3 mb-3 fw-normal text-center">Please sign in</h1>
 <div class="container">
-<form action="{% url 'accounts:login' %}" method="POST">
+<form action="{% url 'accounts:login' %}" method="POST" novalidate>
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.GET.next }}">
-  {% for field in form %}
-  <div class="mb-3">
-    {{ field.label }}
-    {{ field }}
-  </div>
-  {% endfor %}
+
+  {% include 'components/form_field.html' with field=form.username %}
+  {% include 'components/password_field.html' with field=form.password %}
+
   {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-      {{ form.non_field_errors }}
-    </div>
+  <div class="alert alert-danger">
+    {% for error in form.non_field_errors %}
+    <div>{{ error }}</div>
+    {% endfor %}
+  </div>
   {% endif %}
+
   <button type="submit" class="btn btn-primary w-100 mt-3 btn-lg">Login</button>
 </form>
 </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.getElementById("toggle-password");
+
+    toggleButton.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            this.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            this.textContent = "Show";
+        }
+    });
+</script>
 {% endblock %}
