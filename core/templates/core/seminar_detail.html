@@ -26,7 +26,8 @@
                 <p class="lead">teacher: {{ seminar.teacher }}</p>
                 <p class="lead">category: {{ seminar.category }}</p>
                 <p class="lead">{{ seminar.session_date }}</p>
-                <p class="lead">{{ seminar.session_time_start }} to {{ seminar.session_time_end }}</p>
+                <p class="lead">Start: {{ seminar.session_start }}</p>
+                <p class="lead">End: {{ seminar.session_end }}</p>
                 <p class="lead">{% if seminar.location %}address: {{ seminar.location }}{% endif %}</p>
                 <p class="lead">{% if seminar.is_inperson %}Inperson{% else %}Online{% endif %}</p>
                 <hr>
