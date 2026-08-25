@@ -41,6 +41,7 @@
                 <hr>
                 <p class="lead">{{ seminar.participants.count }} Participants</p>
                 <div class="d-flex">
+                    {% if not seminar.status == 'completed' %}
                     {% if not request.user == seminar.teacher %}
                     {% if is_joined %}
                     <button class="btn btn-outline-success flex-shrink-0 me-4" disabled>Participated!</button>
@@ -71,6 +72,7 @@
                         </div>
                     </div>
                     </div>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
