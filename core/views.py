@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar, Category
-from .forms import NewSeminarForm
+from core.models import Seminar, Category, Review
+from core.forms import NewSeminarForm, ReviewForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 @login_required
 def new_seminar(request):
@@ -19,15 +20,21 @@ def new_seminar(request):
     return render(request, 'core/new_seminar.html', context={'form':form})
 
 def seminar_detail(request, seminar_id):
-    seminar = Seminar.objects.get(id=seminar_id)
+    # seminar = Seminar.objects.get(id=seminar_id)
+    seminar = get_object_or_404(Seminar, id=seminar_id)
     is_joined = seminar.participants.filter(id=request.user.id).exists()
+    review_form = ReviewForm()
+    has_reviewed = False
+    if request.user.is_authenticated:
+        has_reviewed = Review.objects.filter(seminar=seminar, user=request.user).exists()
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect('accounts:login')
         seminar.participants.add(request.user)
         return redirect('core:seminar_detail', seminar_id=seminar_id)
-    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
+    # return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
+    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed})
 
 def seminar_list(request):
     query_params = request.GET.copy()
@@ -78,3 +85,27 @@ def edit_seminar(request, seminar_id):
 def delete_seminar(request, seminar_id):
     Seminar.objects.filter(id=seminar_id).update(is_deleted=True)
     return redirect('core:seminar_list')
+
+@login_required
+def create_review(request, seminar_id):
+    seminar = get_object_or_404(Seminar, id=seminar_id)
+    is_joined = seminar.participants.filter(id=request.user.id).exists()
+
+    if request.user not in seminar.participants.all():
+        messages.error(request, 'You must join this seminar before reviewing it.')
+    if Review.objects.filter(seminar=seminar, user=request.user).exists():
+        messages.error(request, 'You have already reviewed this seminar.')
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.seminar = seminar
+            review.user = request.user
+            review.save()
+
+            messages.success(request, 'Your review was added successfully.')
+            return redirect('core:seminar_detail', seminar_id=seminar_id)
+        return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':form, 'review_form_open':True})
+    return redirect('core:seminar_detail', seminar_id=seminar_id)

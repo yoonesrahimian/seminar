@@ -59,3 +59,16 @@ class Seminar(models.Model):
 #     session_count = models.CharField(max_length=4)
 
 # # class discription()
+
+class Review(models.Model):
+    seminar = models.ForeignKey(to=Seminar, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='reviews')
+    rating = models.PositiveSmallIntegerField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['seminar', 'user'], name='unique_user_seminar_review')
+        ]
