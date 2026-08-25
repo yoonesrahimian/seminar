@@ -5,6 +5,9 @@ from core.forms import NewSeminarForm, ReviewForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
+from accounts.models import User
+from django.views.decorators.http import require_POST
+from django.utils.http import url_has_allowed_host_and_scheme
 
 @login_required
 def new_seminar(request):
@@ -109,3 +112,18 @@ def create_review(request, seminar_id):
             return redirect('core:seminar_detail', seminar_id=seminar_id)
         return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':form, 'review_form_open':True})
     return redirect('core:seminar_detail', seminar_id=seminar_id)
+
+@login_required
+@require_POST
+def toggle_favorite(request, seminar_id):
+    seminar = get_object_or_404(Seminar, id=seminar_id)
+
+    if request.user.favorite_seminars.filter(id=seminar_id).exists():
+        request.user.favorite_seminars.remove(seminar)
+    else:
+        request.user.favorite_seminars.add(seminar)
+
+    next_url = request.POST.get('next')
+    if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+        return redirect(next_url)
+    return redirect('seminar_detail', seminar_id=seminar_id)

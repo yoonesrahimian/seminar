@@ -58,7 +58,6 @@ class Seminar(models.Model):
 #     seminar = models.ForeignKey(to='core.Seminar', on_delete=models.CASCADE)
 #     session_count = models.CharField(max_length=4)
 
-# # class discription()
 
 class Review(models.Model):
     seminar = models.ForeignKey(to=Seminar, on_delete=models.CASCADE, related_name='reviews')

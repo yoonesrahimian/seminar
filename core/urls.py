@@ -1,5 +1,5 @@
 from django.urls import path
-from core.views import new_seminar, seminar_detail, seminar_list, edit_seminar, delete_seminar, create_review
+from core.views import new_seminar, seminar_detail, seminar_list, edit_seminar, delete_seminar, create_review, toggle_favorite
 
 app_name = 'core'
 
@@ -9,5 +9,6 @@ urlpatterns = [
     path('seminar_list/', seminar_list, name='seminar_list'),
     path('edit_seminar/<seminar_id>/', edit_seminar, name='edit_seminar'),
     path('delete_seminar/<seminar_id>/', delete_seminar, name='delete_seminar'),
-    path('review/<seminar_id>/', create_review, name='create_review')
+    path('review/<seminar_id>/', create_review, name='create_review'),
+    path('favorite/<seminar_id>/', toggle_favorite, name='toggle_favorite'),
 ]

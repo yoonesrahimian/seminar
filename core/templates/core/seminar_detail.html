@@ -8,15 +8,27 @@
 <section class="mb-5">
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
-                src="{% if seminar.image %}
-                    {{ seminar.image.url }}
-                    {% else %}
-                    {% static 'images/default_seminar_image.png' %}
-                    {% endif %}"
-                alt="..." /></div>
             <div class="col-md-6">
-                <div class="small mb-1">seminar code: {{ seminar.id }}</div>
+                <img class="card-img-top mb-5 mb-md-0" src="{% if seminar.image %}{{ seminar.image.url }}{% else %}{% static 'images/default_seminar_image.png' %}{% endif %}">
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between">
+                    <div class="small mb-1">seminar code: {{ seminar.id }}</div>
+                    <div class="d-flex gap-2">
+                        <form action="{% url 'core:toggle_favorite' seminar.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% if seminar in user.favorite_seminars.all %}
+                            <button type="submit" class="btn btn-link p-0 text-danger" title="Remove from favortie"><i class="bi bi-heart-fill fs-5"></i></button>
+                            {% else %}
+                            <button type="submit" class="btn btn-link p-0" title="Add to favortie"><i class="bi bi-heart fs-5"></i></button>
+                            {% endif %}
+                        </form>
+                        <a href="#" class="btn btn-link p-0" title="Share"><i class="bi bi-share-fill fs-5"></i></a>
+                        <a href="#" class="btn btn-link p-0" title="Copy link"><i class="bi bi-link-45deg fs-5"></i></a>
+                        <a href="#" class="btn btn-link p-0" title="Add to calendar"><i class="bi bi-calendar-date fs-5"></i></a>
+                    </div>
+                </div>
                 <h1 class="display-5 fw-bolder">{{ seminar.title }}</h1>
                 <div class="fs-5 mb-5">
                     <span>{{ seminar.price|intcomma }} Toman</span>

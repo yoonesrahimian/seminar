@@ -24,3 +24,4 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=True, null=True)
     # user_role = models.CharField(choices=('organizer','teacher','participant'), default='participant')
     # bio
+    favorite_seminars = models.ManyToManyField(to='core.Seminar', related_name='favorited_by', blank=True)
