@@ -22,3 +22,8 @@ def joined_seminars(request):
 def profile(request):
     user = request.user
     return render(request, 'dashboard/profile.html', context={'user':user})
+
+@login_required
+def favorite(request):
+    favorite_seminars = request.user.favorite_seminars.all()
+    return render(request, 'dashboard/favorite.html', context={'favorite_seminars': favorite_seminars})

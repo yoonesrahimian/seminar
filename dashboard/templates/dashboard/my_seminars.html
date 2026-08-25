@@ -12,17 +12,18 @@
             {% for seminar in my_seminars %}
             <div class="col mb-5">
                 <div class="card h-100">
-                    <img class="card-img-top"
+                    <img class="card-img-top object-fit-cover"
                     src="{% if seminar.image %}
                     {{ seminar.image.url }}
                     {% else %}
                     {% static 'images/default_seminar_image.png' %}
                     {% endif %}"
-                    alt="seminar image" />
+                    alt="seminar image"
+                    height="220px" />
                     <div class="card-body p-4">
                         <div class="text-center">
                             <h5 class="fw-bolder">{{ seminar.title }}</h5>
-                            {{ seminar.session_date }}
+                            {{ seminar.session_start|date:'d M Y' }}
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
