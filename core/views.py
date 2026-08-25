@@ -8,6 +8,8 @@ from django.contrib import messages
 from accounts.models import User
 from django.views.decorators.http import require_POST
 from django.utils.http import url_has_allowed_host_and_scheme
+from urllib.parse import urlencode
+from django.utils.timezone import localtime
 
 @login_required
 def new_seminar(request):
@@ -23,9 +25,19 @@ def new_seminar(request):
     return render(request, 'core/new_seminar.html', context={'form':form})
 
 def seminar_detail(request, seminar_id):
-    # seminar = Seminar.objects.get(id=seminar_id)
     seminar = get_object_or_404(Seminar, id=seminar_id)
     is_joined = seminar.participants.filter(id=request.user.id).exists()
+    session_start = localtime(seminar.session_start)
+    session_end = localtime(seminar.session_end)
+    calendar_params = {
+        'action': 'TEMPLATE',
+        'text': seminar.title,
+        'details': seminar.description,
+        'location': seminar.location,
+        'dates': (session_start.strftime('%Y%m%dT%H%M%S') + '/' + session_end.strftime('%Y%m%dT%H%M%S')),
+        'ctz': 'Asia/Tehran'
+    }
+    google_calendar_url = ('https://calendar.google.com/calendar/render?' + urlencode(calendar_params))
     review_form = ReviewForm()
     has_reviewed = False
     if request.user.is_authenticated:
@@ -37,7 +49,7 @@ def seminar_detail(request, seminar_id):
         seminar.participants.add(request.user)
         return redirect('core:seminar_detail', seminar_id=seminar_id)
     # return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
-    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed})
+    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed, 'google_calendar_url': google_calendar_url})
 
 def seminar_list(request):
     query_params = request.GET.copy()

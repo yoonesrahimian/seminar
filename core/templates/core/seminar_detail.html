@@ -24,9 +24,9 @@
                             <button type="submit" class="btn btn-link p-0" title="Add to favortie"><i class="bi bi-heart fs-5"></i></button>
                             {% endif %}
                         </form>
-                        <a href="#" class="btn btn-link p-0" title="Share"><i class="bi bi-share-fill fs-5"></i></a>
-                        <a href="#" class="btn btn-link p-0" title="Copy link"><i class="bi bi-link-45deg fs-5"></i></a>
-                        <a href="#" class="btn btn-link p-0" title="Add to calendar"><i class="bi bi-calendar-date fs-5"></i></a>
+                        <button type="button" class="btn btn-link p-0" id="share-seminar" title="Share"><i class="bi bi-share-fill fs-5"></i></a>
+                        <button type="button" class="btn btn-link p-0" id="copy-seminar-link" title="Copy link"><i class="bi bi-link-45deg fs-5"></i></button>
+                        <a href="{{ google_calendar_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-link p-0" title="Add to google calendar"><i class="bi bi-calendar-date fs-5"></i></a>
                     </div>
                 </div>
                 <h1 class="display-5 fw-bolder">{{ seminar.title }}</h1>
@@ -107,4 +107,58 @@
     });
 </script>
 {% endif %}
+<script>
+    const copyButton = document.getElementById("copy-seminar-link");
+    copyButton.addEventListener("click", async function () {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            copyButton.innerHTML = '<i class="bi bi-check-lg fs-5"></i>';
+            copyButton.title = "Copied!";
+            setTimeout(() => {
+                copyButton.innerHTML = '<i class="bi bi-link-45deg fs-5"></i>';
+                copyButton.title = "Copy seminar link";
+            }, 2000);
+        }catch (error) {
+            console.error("Failed to copy seminar link:", error);
+        } 
+    });
+</script>
+<script>
+    const shareButton = document.getElementById("share-seminar");
+
+    shareButton.addEventListener("click", async function () {
+        const shareData = {
+            title: "{{ seminar.title|escapejs }}",
+            text: "Check out this seminar:",
+            url: window.location.href,
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                if (error.name !== "AbortError") {
+                    console.error("Failed to share:", error);
+                }
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+
+                shareButton.innerHTML =
+                    '<i class="bi bi-check-lg fs-5"></i>';
+                shareButton.title = "Link copied!";
+
+                setTimeout(() => {
+                    shareButton.innerHTML =
+                        '<i class="bi bi-share-fill fs-5"></i>';
+                    shareButton.title = "Share seminar";
+                }, 2000);
+
+            } catch (error) {
+                console.error("Failed to copy seminar link:", error);
+            }
+        }
+    });
+</script>
 {% endblock %}
