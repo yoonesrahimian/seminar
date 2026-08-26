@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-sm">
   <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom mx-auto">
-    <a href="{% url 'home' %}" class="navbar-brand pe-3 order-2 order-sm-2 order-lg-first"><span class="fs-4">Seminar</span></a>
+    <a href="{% url 'home' %}" class="navbar-brand fw-semibold text-primary fs-4 pe-3 order-2 order-sm-2 order-lg-first">Seminar</a>
     <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'core:seminar_list' %}">
       <div class="input-group">
         <input name="search" type="text" class="form-control w-25" placeholder="Search..." value="{{ request.GET.search }}">
@@ -44,12 +44,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarMenu">
       <ul class="navbar-nav ms-auto col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 order-last">
-        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link text-primary px-2">Home</a></li>
-        <li class="nav-item"><a href="{% url 'core:new_seminar' %}" class="nav-link text-primary px-2">Create Seminar</a></li>
-        <li class="nav-item"><a href="{% url 'core:seminar_list' %}" class="nav-link text-primary px-2">Seminar List</a></li>
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2">Home</a></li>
+        <li class="nav-item"><a href="{% url 'core:new_seminar' %}" class="nav-link px-2">Create Seminar</a></li>
+        <li class="nav-item"><a href="{% url 'core:seminar_list' %}" class="nav-link px-2">Seminar List</a></li>
         <li class="nav-item">
           <div class="dropdown">
-            <a class="nav-link px-2 text-primary dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+            <a class="nav-link px-2 dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
             
             <ul class="dropdown-menu">
               {% for category in categories %}

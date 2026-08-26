@@ -1,0 +1,86 @@
+<ul class="nav nav-pills flex-column gap-1">
+
+    <li class="nav-item">
+        <a
+            href="{% url 'dashboard:dashboard' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-house"></i>
+            Dashboard
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:my_seminars' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'my_seminars' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-grid"></i>
+            My Seminars
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:joined_seminars' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'joined_seminars' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-calendar-check"></i>
+            Joined Seminars
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:favorite' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'favorite' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-heart"></i>
+            Favorite
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:notifications' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'notifications' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <span class="position-relative">
+                <i class="bi bi-envelope"></i>
+
+                {% if has_unread_notifications %}
+                    <span
+                        class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle"
+                    ></span>
+                {% endif %}
+            </span>
+
+            Notifications
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:profile' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-person-circle"></i>
+            Profile
+        </a>
+    </li>
+
+    <li class="mt-2">
+        <hr>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'home' %}"
+            class="nav-link link-body-emphasis"
+        >
+            <i class="bi bi-box-arrow-left"></i>
+            Back To Home
+        </a>
+    </li>
+
+</ul>
