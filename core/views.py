@@ -27,6 +27,7 @@ def new_seminar(request):
 def seminar_detail(request, seminar_id):
     seminar = get_object_or_404(Seminar, id=seminar_id)
     is_joined = seminar.participants.filter(id=request.user.id).exists()
+    related_seminars = Seminar.objects.filter(category=seminar.category).exclude(id=seminar.id).order_by('-created_at')[:4]
     session_start = localtime(seminar.session_start)
     session_end = localtime(seminar.session_end)
     calendar_params = {
@@ -48,8 +49,7 @@ def seminar_detail(request, seminar_id):
             return redirect('accounts:login')
         seminar.participants.add(request.user)
         return redirect('core:seminar_detail', seminar_id=seminar_id)
-    # return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined})
-    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed, 'google_calendar_url': google_calendar_url})
+    return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed, 'google_calendar_url': google_calendar_url, 'related_seminars': related_seminars})
 
 def seminar_list(request):
     query_params = request.GET.copy()
