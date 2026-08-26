@@ -16,7 +16,7 @@ class RegisterForm(forms.ModelForm):
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'city': forms.Select(attrs={'class': 'form-select '}),
             'country': forms.Select(attrs={'class': 'form-select'}),
-            'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control', 'id': 'profile-picture-input', 'accept': 'image/*'}),
         }
         
     def __init__(self, *args, **kwargs):
@@ -38,6 +38,9 @@ class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'phone', 'email', 'address', 'country', 'city', 'profile_picture']
+        widgets = {
+            'profile_picture': forms.FileInput(attrs={'id': 'profile-picture-input', 'accept': 'image/*'}),
+        }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
