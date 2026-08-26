@@ -25,7 +25,8 @@
             <strong>{{ request.user.first_name }}</strong>
           </a>
           <ul class="dropdown-menu text-small shadow">
-            <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+            <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard{% if has_unread_notifications %}<span class="ms-1 text-danger">●</span>
+        {% endif %}</a></li>
             <li><a class="dropdown-item" href="{% url 'core:new_seminar' %}">New Seminar...</a></li>
             <li><a class="dropdown-item" href="{% url 'dashboard:profile' %}">Profile</a></li>
             <li><hr class="dropdown-divider" /></li>

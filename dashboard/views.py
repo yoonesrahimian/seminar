@@ -27,3 +27,8 @@ def profile(request):
 def favorite(request):
     favorite_seminars = request.user.favorite_seminars.all()
     return render(request, 'dashboard/favorite.html', context={'favorite_seminars': favorite_seminars})
+
+@login_required
+def notifications(request):
+    notifications = request.user.notifications.order_by('-created_at')
+    return render(request, 'dashboard/notifications.html', context={'notifications': notifications})

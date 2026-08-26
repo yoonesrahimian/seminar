@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from accounts.models import User
+from django.shortcuts import render, redirect, get_object_or_404
+from accounts.models import User, Notification
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm, EditUserForm
@@ -54,3 +54,10 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('accounts:login')
+
+@login_required
+def mark_notification_as_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+    notification.is_read = True
+    notification.save(update_fields=['is_read'])
+    return redirect('dashboard:notifications')

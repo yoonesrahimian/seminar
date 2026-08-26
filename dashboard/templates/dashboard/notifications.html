@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="h2 pb-3">Notifications</h2>
+        {% if notifications %}
+        {% for notification in notifications %}
+        <a href="{% url 'accounts:mark_notification_as_read' notification.id %}" class="text-decoration-none text-dark">
+            <div class="card mb-2 {% if not notification.is_read %}bg-light{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ notification.title}}</h5>
+                    <p class="card-text">{{ notification.message }}</p>
+                    <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        {% else %}
+        <p>You don't have any notifications.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
