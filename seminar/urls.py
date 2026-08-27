@@ -25,7 +25,9 @@ urlpatterns = [
     path('', home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('seminar/', include('core.urls')),
-    path('dashboard/', include('dashboard.urls'))
+    path('dashboard/', include('dashboard.urls')),
+    path('blog/', include('blog.urls')),
+    path('ckeditor5/', include('django_ckeditor_5.urls'))
 ]
 
 urlpatterns += static(

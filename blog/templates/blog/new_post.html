@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block title %}New Post{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="py-5 text-center">
+          <h1 class="h2">Create a New Post</h1>
+          <p class="lead">
+            Share your knowledge, ideas, and experiences with others.
+          </p>
+    </div>
+    <div class="col-md-7 col-lg-8 mx-auto">
+        <form action="{% url 'blog:new_post' %}" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}          
+            {% include 'components/form_field.html' with field=form.title %}
+            {% include 'components/form_field.html' with field=form.slug %}
+            {% include 'components/form_field.html' with field=form.content %}
+            {% include 'components/form_field.html' with field=form.featured_image %}
+            {% include 'components/form_field.html' with field=form.category %}
+            {% include 'components/form_field.html' with field=form.is_published %}
+            {% include 'components/form_field.html' with field=form.published_at %}
+
+            <button type="submit" class="btn btn-primary w-100 mt-4">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

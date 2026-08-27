@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <article>
+
+        <h1>{{ post.title }}</h1>
+
+        <div class="text-body-secondary mb-4">
+            {{ post.published_at|date:"F j, Y" }}
+            · {{ post.author }}
+        </div>
+
+        {% if post.featured_image %}
+            <img
+                src="{{ post.featured_image.url }}"
+                alt="{{ post.title }}"
+                class="img-fluid rounded mb-4"
+            >
+        {% endif %}
+
+        <div>
+            {{ post.content|safe }}
+        </div>
+
+    </article>
+
+</div>
+
+{% endblock %}

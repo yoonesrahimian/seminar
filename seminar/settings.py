@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'django_bootstrap5',
     'django.contrib.humanize',
+    'blog.apps.BlogConfig',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +122,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
+
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "blockQuote",
+            "insertTable",
+            "imageUpload",
+            "mediaEmbed",
+            "undo",
+            "redo",
+        ],
+    },
+}

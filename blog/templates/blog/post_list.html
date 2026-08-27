@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1>Blog</h1>
+    {% for post in page_obj %}
+    <article class="mb-5">
+        <h2>
+            <a href="{% url 'blog:post_detail' slug=post.slug %}">
+                {{ post.title }}
+            </a>
+        </h2>
+        <p>{{ post.created_at|date:'F j, Y' }}</p>
+    </article>
+    {% empty %}
+    <p>No posts available.</p>
+    {% endfor %}
+</div>
+{% include 'components/pagination.html' %}
+{% endblock %}
