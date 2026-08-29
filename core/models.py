@@ -34,6 +34,12 @@ class Seminar(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return '/static/images/default_seminar_image.png'
+
+    @property
     def status(self):
         now = timezone.now()
         start = self.session_start

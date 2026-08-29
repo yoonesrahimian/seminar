@@ -28,5 +28,6 @@ def post_list(request):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, is_published=True)
+    recent_posts = Post.objects.order_by('-created_at').exclude(id=post.id)[:3]
 
-    return render(request, 'blog/post_detail.html', context={'post': post})
+    return render(request, 'blog/post_detail.html', context={'post': post, 'recent_posts': recent_posts})

@@ -24,5 +24,11 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(blank=True, null=True)
 
+    @property
+    def image_url(self):
+        if self.featured_image:
+            return self.featured_image.url
+        return '/static/images/default_post_image.png'
+
     def __str__(self):
         return self.title

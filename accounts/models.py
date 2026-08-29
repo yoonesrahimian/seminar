@@ -26,6 +26,12 @@ class User(AbstractUser):
     # bio
     favorite_seminars = models.ManyToManyField(to='core.Seminar', related_name='favorited_by', blank=True)
 
+    @property
+    def profile_picture_url(self):
+        if self.profile_picture:
+            return self.profile_picture.url
+        return '/static/images/default_profile_picture.jpg'
+
     def __str__(self):
         return self.username
 

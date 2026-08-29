@@ -13,11 +13,7 @@
                 <div class="col mb-5">
                     <div class="card h-100">
                         <img class="card-img-top"
-                        src="{% if seminar.image %}
-                        {{ seminar.image.url }}
-                        {% else %}
-                        {% static 'images/default_seminar_image.png' %}
-                        {% endif %}"
+                        src="{{ seminar.image_url }}"
                         alt="seminar image" />
                         <div class="card-body p-4">
                             <div class="text-center">
@@ -72,11 +68,7 @@
                 <div class="col mb-5">
                     <div class="card h-100">
                         <img class="card-img-top"
-                        src="{% if seminar.image %}
-                        {{ seminar.image.url }}
-                        {% else %}
-                        {% static 'images/default_seminar_image.png' %}
-                        {% endif %}"
+                        src="{{ seminar.image_url }}"
                         alt="seminar image" />
                         <div class="card-body p-4">
                             <div class="text-center">
