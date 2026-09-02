@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-sm">
   <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-start p-3 mb-4 border-bottom mx-auto">
-    <a href="{% url 'home' %}" class="navbar-brand fw-semibold text-primary fs-4 pe-3 order-2 order-sm-2 order-lg-first">Seminar</a>
+    <a href="{% url 'home' %}" class="navbar-brand fw-semibold text-primary fs-3 pe-3 order-2 order-sm-2 order-lg-first">Seminar</a>
     <form class="col-12 col-lg-auto my-3 my-lg-0 me-lg-3 order-4 order-sm-4 order-lg-3" method="get" action="{% url 'core:seminar_list' %}">
       <div class="input-group">
         <input name="search" type="text" class="form-control w-25" placeholder="Search..." value="{{ request.GET.search }}">

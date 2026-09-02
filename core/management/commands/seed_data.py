@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand
 from core.models import Category, Seminar
+from blog.models import Category as blog_Category
 from accounts.models import User
 from django.utils import timezone
 from datetime import timedelta
 from pathlib import Path
 from django.conf import settings
 from django.core.files import File
+from django.template.defaultfilters import slugify
 
 seminars = [
     {
@@ -70,6 +72,7 @@ class Command(BaseCommand):
 
         for category_name in categories:
             Category.objects.get_or_create(name=category_name)
+            blog_Category.objects.get_or_create(name=category_name, slug=slugify(category_name))
 
         teacher, created = User.objects.get_or_create(
             username='seed_teacher',
