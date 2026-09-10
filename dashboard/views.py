@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar
+from blog.models import Post
 
 @login_required
 def dashboard(request):
@@ -32,3 +33,8 @@ def favorite(request):
 def notifications(request):
     notifications = request.user.notifications.order_by('-created_at')
     return render(request, 'dashboard/notifications.html', context={'notifications': notifications})
+
+@login_required
+def my_blogs(request):
+    blogs = Post.objects.filter(author=request.user, is_deleted=False).order_by('-created_at')
+    return render(request, 'dashboard/my_blogs.html', context={'blogs': blogs})

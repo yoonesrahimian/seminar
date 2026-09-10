@@ -56,7 +56,7 @@ def post_list(request):
         posts = posts.filter(Q(title__icontains=search))
     
     sort = request.GET.get('sort', 'newest')
-    posts = posts.filter(is_published=True).order_by(SORT_OPTION.get(sort, '-created_at'))
+    posts = posts.filter(is_published=True, is_deleted=False).order_by(SORT_OPTION.get(sort, '-created_at'))
 
     paginator = Paginator(posts, 6)
     page_number = request.GET.get('page')
@@ -65,7 +65,7 @@ def post_list(request):
 
 
 def blog_home(request):
-    posts = Post.objects.filter(is_published=True).order_by('-created_at')[:3]
+    posts = Post.objects.filter(is_published=True, is_deleted=False).order_by('-created_at')[:3]
     first_post = posts[0]
     posts = posts[1:3]
     return render(request, 'blog/blog_home.html', context={'first_post': first_post, 'posts': posts})
@@ -76,3 +76,21 @@ def post_detail(request, slug):
     recent_user_posts = Post.objects.filter(author=post.author).order_by('-created_at').exclude(id=post.id)[:3]
 
     return render(request, 'blog/post_detail.html', context={'post': post, 'recent_posts': recent_posts, 'recent_user_posts': recent_user_posts})
+
+def edit_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.method == 'POST':
+        form = NewPostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:post_detail', slug=post.slug)
+    else:
+        form = NewPostForm(instance=post)
+    return render(request, 'blog/edit_post.html', context={'form': form, 'post': post})
+
+@login_required
+def delete_post(request, slug):
+    post = get_object_or_404(Post, slug=slug, is_deleted=False)
+    post.is_deleted = True
+    post.save(update_fields=['is_deleted'])
+    return redirect('dashboard:my_blogs')

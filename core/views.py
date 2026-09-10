@@ -99,7 +99,7 @@ def edit_seminar(request, seminar_id):
 @login_required
 def delete_seminar(request, seminar_id):
     Seminar.objects.filter(id=seminar_id).update(is_deleted=True)
-    return redirect('core:seminar_list')
+    return redirect('dashboard:my_seminars')
 
 @login_required
 def create_review(request, seminar_id):
