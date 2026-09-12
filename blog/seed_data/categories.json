@@ -1,0 +1,210 @@
+[
+  {
+    "name": "Programming",
+    "children": [
+      {
+        "name": "Python",
+        "children": [
+          {"name": "Django"},
+          {"name": "FastAPI"},
+          {"name": "Automation"},
+          {"name": "Data Science"}
+        ]
+      },
+      {
+        "name": "JavaScript",
+        "children": [
+          {"name": "React"},
+          {"name": "Node.js"},
+          {"name": "TypeScript"}
+        ]
+      },
+      {
+        "name": "Web Development",
+        "children": [
+          {"name": "Frontend"},
+          {"name": "Backend"},
+          {"name": "APIs"},
+          {"name": "Full Stack"}
+        ]
+      },
+      {
+        "name": "Databases",
+        "children": [
+          {"name": "PostgreSQL"},
+          {"name": "MySQL"},
+          {"name": "Redis"}
+        ]
+      },
+      {
+        "name": "DevOps",
+        "children": [
+          {"name": "Linux"},
+          {"name": "Docker"},
+          {"name": "Git & GitHub"},
+          {"name": "Deployment"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Technology",
+    "children": [
+      {
+        "name": "Artificial Intelligence",
+        "children": [
+          {"name": "Machine Learning"},
+          {"name": "Deep Learning"},
+          {"name": "Generative AI"},
+          {"name": "Large Language Models"}
+        ]
+      },
+      {
+        "name": "Cybersecurity",
+        "children": [
+          {"name": "Network Security"},
+          {"name": "Web Security"},
+          {"name": "Privacy"}
+        ]
+      },
+      {
+        "name": "Cloud Computing",
+        "children": [
+          {"name": "AWS"},
+          {"name": "Azure"},
+          {"name": "Google Cloud"}
+        ]
+      },
+      {
+        "name": "Hardware",
+        "children": [
+          {"name": "Computers"},
+          {"name": "Smartphones"},
+          {"name": "Networking"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Career & Education",
+    "children": [
+      {
+        "name": "Programming Career",
+        "children": [
+          {"name": "Getting Started"},
+          {"name": "Freelancing"},
+          {"name": "Job Search"}
+        ]
+      },
+      {
+        "name": "University",
+        "children": [
+          {"name": "Study Skills"},
+          {"name": "Projects"},
+          {"name": "Exams"}
+        ]
+      },
+      {
+        "name": "English",
+        "children": [
+          {"name": "Learning English"},
+          {"name": "Speaking"},
+          {"name": "Technical English"}
+        ]
+      },
+      {
+        "name": "Productivity",
+        "children": [
+          {"name": "Time Management"},
+          {"name": "Focus"},
+          {"name": "Habits"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Books & Media",
+    "children": [
+      {
+        "name": "Books",
+        "children": [
+          {"name": "Programming Books"},
+          {"name": "Fiction"},
+          {"name": "Non-Fiction"}
+        ]
+      },
+      {
+        "name": "Movies & Series",
+        "children": [
+          {"name": "Movies"},
+          {"name": "TV Series"},
+          {"name": "Reviews"}
+        ]
+      },
+      {
+        "name": "Music",
+        "children": [
+          {"name": "Artists"},
+          {"name": "Albums"},
+          {"name": "Instruments"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Lifestyle",
+    "children": [
+      {
+        "name": "Sports",
+        "children": [
+          {"name": "Fitness"},
+          {"name": "Football"},
+          {"name": "Other Sports"}
+        ]
+      },
+      {
+        "name": "Health & Wellness",
+        "children": [
+          {"name": "Nutrition"},
+          {"name": "Mental Wellness"},
+          {"name": "Sleep"}
+        ]
+      },
+      {
+        "name": "Personal Development",
+        "children": [
+          {"name": "Confidence"},
+          {"name": "Communication"},
+          {"name": "Self Improvement"}
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Science",
+    "children": [
+      {"name": "Physics"},
+      {"name": "Biology"},
+      {"name": "Chemistry"},
+      {"name": "Astronomy"}
+    ]
+  },
+  {
+    "name": "Business",
+    "children": [
+      {"name": "Entrepreneurship"},
+      {"name": "Marketing"},
+      {"name": "Finance"},
+      {"name": "Management"}
+    ]
+  },
+  {
+    "name": "Travel",
+    "children": [
+      {"name": "Destinations"},
+      {"name": "Travel Tips"},
+      {"name": "Culture"},
+      {"name": "Adventure"}
+    ]
+  }
+]

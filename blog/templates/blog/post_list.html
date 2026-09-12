@@ -3,7 +3,7 @@
 {% block title %}Seminar Blog{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-3">
     <!-- {% for post in page_obj %}
     <article class="mb-5">
         <h2>
@@ -16,12 +16,15 @@
     {% empty %}
     <p>No posts available.</p>
     {% endfor %} -->
+    {% if is_category_page %}
+      {% include 'blog/components/breadcrumb.html' with breadcrumbs=current_category.get_breadcrumbs %}
+    {% endif %}
   <div class="row mb-2">
     {% for post in page_obj %}
     <div class="col-md-6">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary-emphasis">{{ post.category }}</strong>
+          <strong class="d-inline-block mb-2 text-primary-emphasis">{% for category in post.category.get_breadcrumbs %}{% if not forloop.last %}{{ category.name }} > {% else %}{{ category.name }}{% endif %}{% endfor %}</strong>
           <h3 class="mb-0">{{ post.title }}</h3>
           <div class="mb-1 text-body-secondary">{{ post.created_at|date:'F j, Y' }}</div>
           <!-- <p class="card-text mb-auto">

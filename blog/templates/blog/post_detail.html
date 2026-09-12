@@ -16,32 +16,19 @@
 
 {% block content %}
 <main class="container">
+  {% if not post.is_published %}
+  <div class="alert alert-info d-flex align-items-center justify-content-between">
+    <div><strong>This post is not published yet.</strong> Edit the post to publish it.</div>
+    <a href="{% url 'blog:edit_post' slug=post.slug %}" class="btn btn-warning">Edit Post</a>
+  </div>
+  {% endif %}
   <div class="row g-5">
     <div class="col-md-8">
-        <nav aria-label="breadcrumb">
-          <ol
-            class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3"
-          >
-            <li class="breadcrumb-item">
-              <a class="link-body-emphasis" href="#">
-                <i class="bi bi-house-door-fill"></i>
-                <span class="visually-hidden">Home</span>
-              </a>
-            </li>
-            <li class="breadcrumb-item">
-              <a
-                class="link-body-emphasis fw-semibold text-decoration-none"
-                href="#"
-                >Library</a
-              >
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Data</li>
-          </ol>
-        </nav>
+      {% include 'blog/components/breadcrumb.html' with breadcrumbs=post.category.get_breadcrumbs last_breadcrumb_text=post.title %}
       <article class="blog-post">
         <h2 class="display-5 link-body-emphasis mb-1">{{ post.title }}</h2>
         <p class="blog-post-meta">
-          {{ post.created_at|date:'M d, Y' }} by <a href="#">{{ post.author}}</a>
+          {% if post.is_published %}Published at: {{ post.published_at|date:'M d, Y' }}{% endif %} by <a href="#">{{ post.author}}</a>
         </p>
         {{ post.content|safe }}
       </article>

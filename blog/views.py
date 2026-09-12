@@ -7,6 +7,9 @@ from django.db.models import Q
 
 @login_required
 def new_post(request):
+    if not request.user.is_staff:
+        return redirect('blog:blog_home')
+    
     if request.method == 'POST':
         form = NewPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -16,7 +19,6 @@ def new_post(request):
             return redirect('blog:post_detail', slug=post.slug)
     else:
         form = NewPostForm()
-
     return render(request, 'blog/new_post.html', context={'form': form})
 
 # def post_list(request):
@@ -41,42 +43,40 @@ def post_list(request):
     query_params.pop("page", None)
     category_id = request.GET.get("category")
     search = request.GET.get("search")
-    posts = Post.objects.all()
+    posts = Post.objects.filter(is_published=True, is_deleted=False)
     current_category = None
 
-    SORT_OPTION = {
-        'newest': '-created_at',
-        'oldest': 'created_at',
-    }
-
     if category_id:
-        posts = posts.filter(category_id=category_id)
-        current_category = Category.objects.get(id=category_id)
+        current_category = get_object_or_404(Category, id=category_id)
+        posts = posts.filter(category_id__in=current_category.get_descendant_ids())
     if search:
-        posts = posts.filter(Q(title__icontains=search))
-    
-    sort = request.GET.get('sort', 'newest')
-    posts = posts.filter(is_published=True, is_deleted=False).order_by(SORT_OPTION.get(sort, '-created_at'))
+        posts = posts.filter(Q(title__icontains=search) | Q(content__icontains=search))
+
+    posts = posts.order_by('-published_at')
 
     paginator = Paginator(posts, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'blog/post_list.html', context={'page_obj':page_obj, 'current_category': current_category, 'query_params': query_params.urlencode(), 'sort': sort})
-
+    return render(request, 'blog/post_list.html', context={'page_obj':page_obj, 'current_category': current_category, 'query_params': query_params.urlencode()})
 
 def blog_home(request):
-    posts = Post.objects.filter(is_published=True, is_deleted=False).order_by('-created_at')[:3]
-    first_post = posts[0]
+    posts = Post.objects.filter(is_published=True, is_deleted=False).order_by('-published_at')[:3]
+    first_post = posts[0] if posts else None
     posts = posts[1:3]
     return render(request, 'blog/blog_home.html', context={'first_post': first_post, 'posts': posts})
 
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug, is_published=True)
-    recent_posts = Post.objects.order_by('-created_at').exclude(id=post.id)[:3]
-    recent_user_posts = Post.objects.filter(author=post.author).order_by('-created_at').exclude(id=post.id)[:3]
-
+    post = get_object_or_404(Post, slug=slug)
+    recent_posts = Post.objects.order_by('-published_at').exclude(id=post.id)[:3]
+    recent_user_posts = Post.objects.filter(author=post.author, is_published=True, is_deleted=False).order_by('-published_at').exclude(id=post.id)[:3]
+    if not post.is_published:
+        if request.user == post.author:
+            return render(request, 'blog/post_detail.html', context={'post': post, 'recent_posts': recent_posts, 'recent_user_posts': recent_user_posts})
+        else:
+            return redirect('blog:blog_home')
     return render(request, 'blog/post_detail.html', context={'post': post, 'recent_posts': recent_posts, 'recent_user_posts': recent_user_posts})
 
+@login_required
 def edit_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.method == 'POST':
@@ -94,3 +94,18 @@ def delete_post(request, slug):
     post.is_deleted = True
     post.save(update_fields=['is_deleted'])
     return redirect('dashboard:my_blogs')
+
+def category_post(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = Post.objects.filter(category_id__in=category.get_descendant_ids(), is_published=True, is_deleted=False)
+
+    query = request.GET.get('q', '').strip()
+    if query:
+        posts = posts.filter(Q(title__incontains=query) | Q(content__icontains=query))
+
+    posts.order_by('-published_at')
+
+    paginator = Paginator(posts, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'blog/post_list.html', context={'page_obj': page_obj, 'current_category': category, 'query_params': None, 'is_category_page': True})

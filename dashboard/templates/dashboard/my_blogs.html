@@ -15,8 +15,9 @@
                     height="220px" />
                     <div class="card-body p-4">
                         <div class="text-center">
+                            {% if not blog.is_published %}<h6 class="card-subtitle mb-2 text-danger">Not Published</h6>{% endif %}
                             <h5 class="fw-bolder">{{ blog.title }}</h5>
-                            {{ blog.created_at|date:'d M Y' }}
+                            Created: {{ blog.created_at|date:'d M Y' }}
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">

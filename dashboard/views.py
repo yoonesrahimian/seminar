@@ -36,5 +36,5 @@ def notifications(request):
 
 @login_required
 def my_blogs(request):
-    blogs = Post.objects.filter(author=request.user, is_deleted=False).order_by('-created_at')
+    blogs = Post.objects.filter(author=request.user, is_deleted=False).order_by('-published_at')
     return render(request, 'dashboard/my_blogs.html', context={'blogs': blogs})

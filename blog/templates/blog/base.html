@@ -286,7 +286,7 @@
         <nav class="nav nav-underline justify-content-between">
           <!-- <a class="nav-item nav-link link-body-emphasis active" href="#">U.S.</a> -->
           {% for category in blog_categories %}
-          <a class="nav-item nav-link link-body-emphasis {% if current_category.id == category.id %}active{% endif %}" href="{% url 'blog:post_list' %}?category={{ category.id }}">{{ category.name }}</a>
+          <a class="nav-item nav-link link-body-emphasis {% if current_category.id == category.id %}active{% endif %}" href="{% url 'blog:category' slug=category.slug %}">{{ category.name }}</a>
           {% endfor %}
         </nav>
       </div>
