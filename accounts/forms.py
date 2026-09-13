@@ -62,3 +62,7 @@ class EditUserForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg', 'autocomplete': 'off'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control form-control-lg', 'id': 'password', 'autocomplete': 'off'}))
+
+class WalletDepositForm(forms.Form):
+    amount = forms.DecimalField(min_value=1, max_digits=12, decimal_places=0)
+    description = forms.CharField(required=False, max_length=255)
