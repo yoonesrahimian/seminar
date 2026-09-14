@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlencode
 from django.utils.timezone import localtime
+from core.services import participate_in_seminar, SeminarPurchaseError
 
 @login_required
 def new_seminar(request):
@@ -43,12 +44,6 @@ def seminar_detail(request, seminar_id):
     has_reviewed = False
     if request.user.is_authenticated:
         has_reviewed = Review.objects.filter(seminar=seminar, user=request.user).exists()
-    
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return redirect('accounts:login')
-        seminar.participants.add(request.user)
-        return redirect('core:seminar_detail', seminar_id=seminar_id)
     return render(request, 'core/seminar_detail.html', context={'seminar':seminar, 'is_joined':is_joined, 'review_form':review_form, 'has_reviewed':has_reviewed, 'google_calendar_url': google_calendar_url, 'related_seminars': related_seminars})
 
 def seminar_list(request):
@@ -83,6 +78,19 @@ def seminar_list(request):
 def home(request):
     seminars = Seminar.objects.filter(is_deleted=False).order_by('-created_at')[:4]
     return render(request, 'core/home.html', context={'seminars':seminars})
+
+@login_required
+def participate(request, seminar_id):
+    seminar = get_object_or_404(Seminar, id=seminar_id, is_deleted=False)
+    if request.method != 'POST':
+        return redirect('core:seminar_detail', seminar_id)
+    try:
+        participate_in_seminar(request.user, seminar)
+    except SeminarPurchaseError as error:
+        messages.error(request, str(error))
+    else:
+        messages.success(request, 'You are now participating in this seminar.')
+    return redirect('core:seminar_detail', seminar_id)
 
 @login_required
 def edit_seminar(request, seminar_id):

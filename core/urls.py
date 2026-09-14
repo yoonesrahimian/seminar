@@ -1,5 +1,5 @@
 from django.urls import path
-from core.views import new_seminar, seminar_detail, seminar_list, edit_seminar, delete_seminar, create_review, toggle_favorite
+from core.views import new_seminar, seminar_detail, seminar_list, edit_seminar, delete_seminar, create_review, toggle_favorite, participate
 
 app_name = 'core'
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_seminar/<seminar_id>/', delete_seminar, name='delete_seminar'),
     path('review/<seminar_id>/', create_review, name='create_review'),
     path('favorite/<seminar_id>/', toggle_favorite, name='toggle_favorite'),
+    path('seminar_detail/<seminar_id>/participate', participate, name='participate'),
 ]

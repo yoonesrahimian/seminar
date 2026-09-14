@@ -31,7 +31,7 @@
                 </div>
                 <h1 class="display-5 fw-bolder">{{ seminar.title }}</h1>
                 <div class="fs-5 mb-5">
-                    <span>{{ seminar.price|intcomma }} Toman</span>
+                    <span>{% if seminar.price == 0%}Free{% else %}{{ seminar.price|intcomma }} Toman{% endif %}</span>
                 </div>
                 <p class="lead">{{ seminar.description }}</p>
                 <hr>
@@ -58,7 +58,7 @@
                     {% if is_joined %}
                     <button class="btn btn-outline-success flex-shrink-0 me-4" disabled>Participated!</button>
                     {% else %}
-                    <form method="post">
+                    <form method="post" action="{% url 'core:participate' seminar.id %}">
                         {% csrf_token %}
                         <button class="btn btn-outline-primary flex-shrink-0 me-4" type="submit">Participate</button>
                         {% endif %}

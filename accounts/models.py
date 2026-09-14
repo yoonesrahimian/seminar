@@ -51,7 +51,7 @@ class Wallet(models.Model):
     balance = models.DecimalField(max_digits=12, decimal_places=0, default=0)
 
     def __str__(self):
-        return f'{self.user} - {self.balance}'
+        return f'{self.user}'
 
 class WalletTransaction(models.Model):
     class TransactionType(models.TextChoices):

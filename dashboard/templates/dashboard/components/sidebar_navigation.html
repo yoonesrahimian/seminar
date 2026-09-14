@@ -54,6 +54,26 @@
 
     <li>
         <a
+            href="{% url 'core:new_seminar' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'new_seminar' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-plus-circle"></i>
+            Create Seminar
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'dashboard:wallet' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'wallet' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-wallet2"></i>
+            Wallet
+        </a>
+    </li>
+
+    <li>
+        <a
             href="{% url 'dashboard:favorite' %}"
             class="nav-link {% if request.resolver_match.url_name == 'favorite' %}active{% else %}link-body-emphasis{% endif %}"
         >

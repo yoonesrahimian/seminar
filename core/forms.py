@@ -2,13 +2,13 @@ from django import forms
 from core.models import Seminar, Review
 
 class NewSeminarForm(forms.ModelForm):
+    price = forms.CharField(help_text='Set the price to zero so your seminar can be viewed for Free.', widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Seminar
         exclude = ['teacher', 'participants', 'is_deleted']
         widgets = {
             'title': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
-            'price': forms.TextInput(attrs={'class':'form-control'}),
             'location': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
             'is_public': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'is_inperson': forms.CheckboxInput(attrs={'class':'form-check-input'}),

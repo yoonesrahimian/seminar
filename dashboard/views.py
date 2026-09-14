@@ -38,3 +38,9 @@ def notifications(request):
 def my_blogs(request):
     blogs = Post.objects.filter(author=request.user, is_deleted=False).order_by('-published_at')
     return render(request, 'dashboard/my_blogs.html', context={'blogs': blogs})
+
+@login_required
+def wallet(request):
+    wallet = request.user.wallet
+    transactions = wallet.transactions.all().order_by('-created_at')
+    return render(request, 'dashboard/wallet.html', context={'transactions': transactions, 'wallet': wallet})

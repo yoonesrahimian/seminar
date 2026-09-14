@@ -4,6 +4,9 @@
         {{ field }}
         <span class="input-group-text">Toman</span>
     </div>
+    {% if field.help_text %}
+    <dvi class="form-text">{{ field.help_text }}</dvi>
+    {% endif %}
     {% if field.errors %}
     <div class="invalid-feedback d-block">
         {{ field.errors.0 }}

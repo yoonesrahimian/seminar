@@ -1,5 +1,6 @@
 {% load static %}
 {% load django_bootstrap5 %}
+{% load humanize %}
 
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
@@ -179,6 +180,11 @@
         </div>
 
         <div class="offcanvas-body">
+            <a href="{% url 'dashboard:wallet' %}" class="nav-link">
+                <i class="bi bi-wallet2"></i>
+                {{ request.user.wallet.balance|intcomma }} Toman
+            </a>
+            <hr>
 
             {% include "dashboard/components/sidebar_navigation.html" %}
 
@@ -193,9 +199,10 @@
         <!-- Desktop Header -->
         <header class="d-none d-md-flex justify-content-between align-items-center p-3 border-bottom">
 
-            <h1 class="h3 mb-0">
-                Welcome, {{ request.user.first_name }}
-            </h1>
+        <a href="{% url 'dashboard:wallet' %}" class="nav-link">
+            <i class="bi bi-wallet2"></i>
+            {{ request.user.wallet.balance|intcomma }} Toman
+        </a>
 
             <div class="dropdown">
 
