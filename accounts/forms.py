@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'password', 'phone', 'email', 'address', 'country', 'city', 'profile_picture']
+        fields = ['first_name', 'last_name', 'username', 'password', 'phone', 'email', 'biography', 'address', 'country', 'city', 'profile_picture']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -13,6 +13,7 @@ class RegisterForm(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'form-control', 'id': 'password', 'autocomplete': 'off'}),
             'phone': forms.TelInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'biography': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'city': forms.Select(attrs={'class': 'form-select '}),
             'country': forms.Select(attrs={'class': 'form-select'}),
@@ -37,7 +38,7 @@ class RegisterForm(forms.ModelForm):
 class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'phone', 'email', 'address', 'country', 'city', 'profile_picture']
+        fields = ['first_name', 'last_name', 'username', 'phone', 'email', 'biography', 'address', 'country', 'city', 'profile_picture']
         widgets = {
             'profile_picture': forms.FileInput(attrs={'id': 'profile-picture-input', 'accept': 'image/*'}),
         }

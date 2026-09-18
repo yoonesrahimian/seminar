@@ -15,6 +15,7 @@
                 <p class="lead">Username: {{ user.username }}</p>
                 <p class="lead">Phone: {{ user.phone }}</p>
                 {% if user.email %}<p class="lead">Email: {{ user.email }}</p>{% endif %}
+                {% if user.biography %}<p class="lead">Bio: {{ user.biography }}</p>{% endif %}
                 {% if user.country %}<p class="lead">Country: {{ user.get_country_display }}</p>{% endif %}
                 {% if user.city %}<p class="lead">City: {{ user.get_city_display }}</p>{% endif %}
                 {% if user.address %}<p class="lead">Address: {{ user.address }}</p>{% endif %}
