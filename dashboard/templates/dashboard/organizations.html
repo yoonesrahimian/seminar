@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Organizations{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'new_organization' %}" class="btn btn-primary">Create Organization</a>
+    </div>
+    <h1>Organizations</h1>
+    <div class="row g-2 mt-4">
+    {% for organization in organizations %}
+    <div class="card col-md-6">
+        <a class="text-decoration-none text-reset" href="{% url 'dashboard:organization_detail' organization.id %}">
+            <div class="card-body d-flex align-items-center">
+                <img class="d-inline me-2" src="{{ organization.logo_url }}" height="100" width="100" alt="organization logo">
+                <div>
+                    <h5 class="card-title">{{ organization.name }}</h5>
+                    <p class="card-text">{{ organization.description }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-muted">
+        You don't have any organizations yet.
+    </p>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

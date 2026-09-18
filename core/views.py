@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar, Category, Review
-from core.forms import NewSeminarForm, ReviewForm
+from core.forms import NewSeminarForm, ReviewForm, NewOrganizationForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -147,3 +147,17 @@ def toggle_favorite(request, seminar_id):
     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
         return redirect(next_url)
     return redirect('seminar_detail', seminar_id=seminar_id)
+
+
+@login_required
+def new_organization(request):
+    if request.method == 'POST':
+        form = NewOrganizationForm(request.POST, request.FILES)
+        if form.is_valid():
+            organization = form.save(commit=False)
+            organization.owner = request.user
+            organization.save()
+            return redirect('dashboard:organizations')
+    else:
+        form = NewOrganizationForm()
+    return render(request, 'core/new_organization.html', context={'form': form})

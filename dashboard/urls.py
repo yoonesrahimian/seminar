@@ -1,5 +1,5 @@
 from django.urls import path
-from dashboard.views import dashboard, profile, my_seminars, joined_seminars, favorite, notifications, my_blogs, wallet
+from dashboard.views import dashboard, profile, my_seminars, joined_seminars, favorite, notifications, my_blogs, wallet, organizations, organization_detail
 
 app_name = 'dashboard'
 
@@ -11,5 +11,7 @@ urlpatterns = [
     path('favorite/', favorite, name='favorite'),
     path('notifications/', notifications, name='notifications'),
     path('my_blogs/', my_blogs, name='my_blogs'),
-    path('wallet/', wallet, name='wallet')
+    path('wallet/', wallet, name='wallet'),
+    path('organizations/', organizations, name='organizations'),
+    path('organiztions/detail/<int:id>/', organization_detail, name='organization_detail'),
 ]

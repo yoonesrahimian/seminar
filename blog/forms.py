@@ -12,7 +12,7 @@ class NewPostForm(forms.ModelForm):
         fields = ['title', 'slug', 'short_description', 'content', 'featured_image', 'category', 'is_published']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'featured_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'id': 'featured-image-input', 'accept': 'image/*'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'is_published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'published_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),

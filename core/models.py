@@ -1,6 +1,42 @@
 from django.db import models
 from django.utils import timezone
 
+class Organization(models.Model):
+    owner = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='owned_organizations')
+    name = models.CharField(max_length=150)
+    description = models.TextField(blank=True)
+    logo = models.ImageField(upload_to='organizations/', blank=True)
+    members = models.ManyToManyField(to='accounts.User', through='OrganizationMember', related_name='organizations')
+    website = models.URLField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            return self.logo.url
+        return '/static/images/default_organization_logo.jpg'
+
+    def __str__(self):
+        return self.name
+
+class OrganizationMember(models.Model):
+    class Role(models.TextChoices):
+        ADMIN = 'admin', 'Admin'
+        TEACHER = 'teacher', 'Teacher'
+    organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE, related_name='memberships')
+    user = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='organization_memberships')
+    role = models.CharField(max_length=30, choices=Role.choices, default=Role.ADMIN)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['organization', 'user'], name='unique_organization_member')
+        ]
+
+    def __str__(self):
+        return f'{self.organization} - {self.user} - {self.role}'
+    
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -13,8 +49,8 @@ class Category(models.Model):
 
 class Seminar(models.Model):
     teacher = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='taught_seminars')
+    organization = models.ForeignKey(to=Organization, on_delete=models.PROTECT, related_name='seminars', null=True, blank=True)
     participants = models.ManyToManyField(to='accounts.User', related_name='joined_seminars', blank=True)
-    # organizer = models.TextField(null=True)
     title = models.CharField(max_length=50)
     description = models.TextField()
     price = models.PositiveIntegerField()
@@ -24,13 +60,8 @@ class Seminar(models.Model):
     session_start = models.DateTimeField()
     session_end = models.DateTimeField()
     image = models.ImageField(upload_to='seminar_image/', blank=True)
-    # max_particiant = models.CharField(max_length=7)
-    # Platform
-    # tag = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='seminars')
     created_at = models.DateTimeField(auto_now_add=True)
-    # discount_code
-    # is_course
     is_deleted = models.BooleanField(default=False)
 
     @property
@@ -63,11 +94,6 @@ class Seminar(models.Model):
 
     def __str__(self):
         return self.title
-
-# class Session(models.Model):
-#     seminar = models.ForeignKey(to='core.Seminar', on_delete=models.CASCADE)
-#     session_count = models.CharField(max_length=4)
-
 
 class Review(models.Model):
     seminar = models.ForeignKey(to=Seminar, on_delete=models.CASCADE, related_name='reviews')

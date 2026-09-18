@@ -103,6 +103,16 @@
 
     <li>
         <a
+            href="{% url 'dashboard:organizations' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'organizations' %}active{% else %}link-body-emphasis{% endif %}"
+        >
+            <i class="bi bi-building"></i>
+            Organizations
+        </a>
+    </li>
+
+    <li>
+        <a
             href="{% url 'dashboard:profile' %}"
             class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% else %}link-body-emphasis{% endif %}"
         >

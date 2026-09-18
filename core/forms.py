@@ -1,5 +1,5 @@
 from django import forms
-from core.models import Seminar, Review
+from core.models import Seminar, Review, Organization
 
 class NewSeminarForm(forms.ModelForm):
     price = forms.CharField(help_text='Set the price to zero so your seminar can be viewed for Free.', widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -15,7 +15,7 @@ class NewSeminarForm(forms.ModelForm):
             'session_start': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'session_end': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
-            'image': forms.FileInput(attrs={'class':'form-control'}),
+            'image': forms.FileInput(attrs={'class':'form-control', 'id': 'image-input', 'accept': 'image/*'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -63,3 +63,22 @@ class ReviewForm(forms.ModelForm):
         if not comment:
             raise forms.ValidationError('Comment cannot be empty.')
         return comment
+
+class NewOrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+        fields = ['name', 'description', 'logo', 'website']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'logo': forms.FileInput(attrs={'class': 'form-control', 'id': 'logo-input', 'accept': 'image/*'}),
+            'website': forms.URLInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.is_bound:
+            for name in self.fields:
+                if self.errors.get(name):
+                    current_class = self.fields[name].widget.attrs.get('class', '')
+                    self.fields[name].widget.attrs['class'] = (f'{current_class} is-invalid').strip()

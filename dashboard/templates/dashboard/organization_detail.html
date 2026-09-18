@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Organization{% endblock %}
+
+{% block content %}
+<section class="mb-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0" src="{{ organization.logo_url }}">
+            </div>
+            <div class="col-md-6">
+                <h1 class="display-5 fw-bolder">{{ organization.name }}</h1>
+                <hr>
+                <p class="lead">{% if organization.description %}Description: {{ organization.description }}{% endif %}</p>
+                <p class="lead">{% if organization.website %}website: <a href="{{ organization.website }}">{{ organization.website }}</a>{% endif %}</p>
+                <div class="d-flex">
+                    <a href="" class="btn btn-outline-warning flex-shrink-0 me-4">Edit</a>
+                    <button type="button" class="btn btn-outline-danger flex-shrink-0 me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Seminar</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete the seminar?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                            <a href="" class="btn btn-danger">Delete</a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -19,12 +19,14 @@ from django.urls import path, include
 from core.views import home
 from django.conf import settings
 from django.conf.urls.static import static
+from core.views import new_organization
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('seminar/', include('core.urls')),
+    path('organization/new/', new_organization, name='new_organization'),
     path('dashboard/', include('dashboard.urls')),
     path('blog/', include('blog.urls')),
     path('ckeditor5/', include('django_ckeditor_5.urls'))

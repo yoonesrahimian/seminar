@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar
+from core.models import Seminar, Organization
 from blog.models import Post
 
 @login_required
@@ -44,3 +44,13 @@ def wallet(request):
     wallet = request.user.wallet
     transactions = wallet.transactions.all().order_by('-created_at')
     return render(request, 'dashboard/wallet.html', context={'transactions': transactions, 'wallet': wallet})
+
+@login_required
+def organizations(request):
+    organizations = request.user.owned_organizations.all()
+    return render(request, 'dashboard/organizations.html', context={'organizations': organizations})
+
+@login_required
+def organization_detail(request, id):
+    organization = get_object_or_404(Organization, id=id)
+    return render(request, 'dashboard/organization_detail.html', context={'organization': organization})
