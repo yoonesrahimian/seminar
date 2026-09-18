@@ -50,7 +50,7 @@ def post_list(request):
         current_category = get_object_or_404(Category, id=category_id)
         posts = posts.filter(category_id__in=current_category.get_descendant_ids())
     if search:
-        posts = posts.filter(Q(title__icontains=search) | Q(content__icontains=search))
+        posts = posts.filter(Q(title__icontains=search) | Q(content__icontains=search) | Q(short_description__icontains=search))
 
     posts = posts.order_by('-published_at')
 
@@ -99,9 +99,9 @@ def category_post(request, slug):
     category = get_object_or_404(Category, slug=slug)
     posts = Post.objects.filter(category_id__in=category.get_descendant_ids(), is_published=True, is_deleted=False)
 
-    query = request.GET.get('q', '').strip()
-    if query:
-        posts = posts.filter(Q(title__incontains=query) | Q(content__icontains=query))
+    # query = request.GET.get('q', '').strip()
+    # if query:
+    #     posts = posts.filter(Q(title__incontains=query) | Q(content__icontains=query))
 
     posts.order_by('-published_at')
 

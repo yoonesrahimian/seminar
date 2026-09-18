@@ -19,6 +19,7 @@
             {% csrf_token %}          
             {% include 'components/form_field.html' with field=form.title %}
             {% include 'components/form_field.html' with field=form.slug %}
+            {% include 'components/form_field.html' with field=form.short_description %}
             {% include 'components/form_field.html' with field=form.content %}
             {% include 'components/form_field.html' with field=form.featured_image %}
             {% include 'components/form_field.html' with field=form.category %}

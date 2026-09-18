@@ -50,6 +50,7 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
+    short_description = models.CharField(max_length=255, blank=True)
     content = CKEditor5Field('Content', config_name='default')
     featured_image = models.ImageField(upload_to='blog/', blank=True, null=True)
     author = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='blog_posts')

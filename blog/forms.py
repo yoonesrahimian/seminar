@@ -6,9 +6,10 @@ from django.utils import timezone
 
 class NewPostForm(forms.ModelForm):
     slug = forms.SlugField(required=False, help_text='Leave blank to automatically generate it from the title.', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    short_description = forms.CharField(required=False, help_text='Write a brief summary of the post. Maximum 255 characters.', widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Post
-        fields = ['title', 'slug', 'content', 'featured_image', 'category', 'is_published']
+        fields = ['title', 'slug', 'short_description', 'content', 'featured_image', 'category', 'is_published']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'featured_image': forms.FileInput(attrs={'class': 'form-control'}),
