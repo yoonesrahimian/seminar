@@ -1,5 +1,6 @@
 from django import forms
-from core.models import Seminar, Review, Organization
+from core.models import Seminar, Review, Organization, OrganizationMembership
+from accounts.models import User, OrganizationInvitation
 
 class NewSeminarForm(forms.ModelForm):
     price = forms.CharField(help_text='Set the price to zero so your seminar can be viewed for Free.', widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -82,3 +83,62 @@ class NewOrganizationForm(forms.ModelForm):
                 if self.errors.get(name):
                     current_class = self.fields[name].widget.attrs.get('class', '')
                     self.fields[name].widget.attrs['class'] = (f'{current_class} is-invalid').strip()
+
+class OrganizationInvitationForm(forms.Form):
+    organization_id = forms.IntegerField(widget=forms.HiddenInput)
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter username'}))
+    role = forms.ChoiceField(choices=OrganizationMembership.Role.choices, widget=forms.Select(attrs={'class': 'form-select'}))
+
+    def __init__(self, *args, request_user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request_user = request_user
+
+        if self.is_bound:
+            for name in self.fields:
+                if self.errors.get(name):
+                    current_class = self.fields[name].widget.attrs.get('class', '')
+                    self.fields[name].widget.attrs['class'] = (f'{current_class} is-invalid').strip()
+
+    def clean_organization_id(self):
+        organization_id = self.cleaned_data['organization_id']
+
+        try:
+            return Organization.objects.get(id=organization_id, owner=self.request_user)
+        except Organization.DoesNotExist:
+            raise forms.ValidationError('You do not have permission to use this organization.')
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise forms.ValidationError('The user does not exist.')
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        organization = cleaned_data.get('organization_id')
+        invited_user = cleaned_data.get('username')
+
+        if not organization or not invited_user:
+            return cleaned_data
+
+        pending_invitation = OrganizationInvitation.objects.filter(
+            organization=organization,
+            user=invited_user,
+            status=OrganizationInvitation.StatusChoices.PENDING,
+        ).exists()
+
+        if pending_invitation:
+            raise forms.ValidationError('This user already has a pending invitation.')
+
+        membership_exists = OrganizationMembership.objects.filter(
+            organization=organization,
+            user=invited_user,
+        ).exists()
+
+        if membership_exists:
+            raise forms.ValidationError('This user is already a member of this organization.')
+
+        return cleaned_data

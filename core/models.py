@@ -6,7 +6,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True)
     logo = models.ImageField(upload_to='organizations/', blank=True)
-    members = models.ManyToManyField(to='accounts.User', through='OrganizationMember', related_name='organizations')
+    members = models.ManyToManyField(to='accounts.User', through='OrganizationMembership', related_name='organizations')
     website = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -19,19 +19,18 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
-class OrganizationMember(models.Model):
+class OrganizationMembership(models.Model):
     class Role(models.TextChoices):
         ADMIN = 'admin', 'Admin'
         TEACHER = 'teacher', 'Teacher'
     organization = models.ForeignKey(to=Organization, on_delete=models.CASCADE, related_name='memberships')
     user = models.ForeignKey(to='accounts.User', on_delete=models.CASCADE, related_name='organization_memberships')
-    role = models.CharField(max_length=30, choices=Role.choices, default=Role.ADMIN)
+    role = models.CharField(max_length=30, choices=Role.choices, default=Role.TEACHER)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['organization', 'user'], name='unique_organization_member')
+            models.UniqueConstraint(fields=['organization', 'user'], name='unique_organization_membership')
         ]
 
     def __str__(self):

@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from core.models import Seminar, Organization
 from blog.models import Post
+from core.forms import OrganizationInvitationForm
 
 @login_required
 def dashboard(request):
@@ -53,4 +54,8 @@ def organizations(request):
 @login_required
 def organization_detail(request, id):
     organization = get_object_or_404(Organization, id=id)
-    return render(request, 'dashboard/organization_detail.html', context={'organization': organization})
+    context={
+        'organization': organization,
+        'invitation_form': OrganizationInvitationForm(initial={'organization_id': organization.id})
+        }
+    return render(request, 'dashboard/organization_detail.html', context=context)

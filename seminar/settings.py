@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'blog.apps.BlogConfig',
     'django_ckeditor_5',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

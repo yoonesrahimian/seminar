@@ -14,30 +14,79 @@
                 <hr>
                 <p class="lead">{% if organization.description %}Description: {{ organization.description }}{% endif %}</p>
                 <p class="lead">{% if organization.website %}website: <a href="{{ organization.website }}">{{ organization.website }}</a>{% endif %}</p>
-                <div class="d-flex">
-                    <a href="" class="btn btn-outline-warning flex-shrink-0 me-4">Edit</a>
-                    <button type="button" class="btn btn-outline-danger flex-shrink-0 me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Seminar</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete the seminar?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                            <a href="" class="btn btn-danger">Delete</a>
-                        </div>
-                        </div>
+                <hr>
+                <button type="button" class="btn btn-primary btn-lg w-100 mb-3" data-bs-toggle="modal" data-bs-target="#addMemberModal">Add Member</button>
+                <div class="row g-2">
+                    <div class="col">
+                        <a href="{% url 'edit_organization' organization.id %}" class="btn btn-outline-warning w-100">Edit</a>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                    </div>
+                </div>
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Organization</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete the organization?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                        <a href="{% url 'delete_organization' organization.id %}" class="btn btn-danger">Delete</a>
                     </div>
                     </div>
                 </div>
+                </div>
+                <!-- Add Member Modal -->
+                 <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addMemberModalLabel">
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Closs"></button>
+                                </h5>
+                            </div>
+                            <form action="{% url 'send_organization_invitation' %}" method="post" novalidate>
+                                {% csrf_token %}
+                                <!-- <input type="hidden" name="organization_id" value="{{ organization.id }}"> -->
+                                 {{ invitation_form.organization_id }}
+                                <div class="modal-body">
+                                    {% include 'components/form_field.html' with field=invitation_form.username %}
+                                    {% include 'components/form_field.html' with field=invitation_form.role %}
+                                    <div class="form-text">
+                                        The user will receive an invitation notification.
+                                    </div>
+                                    {% include 'components/non_field_errors.html' with form=invitation_form %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Send Invitation</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+{% if invitation_form_open %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addMemberModal = new bootstrap.Modal(
+            document.getElementById("addMemberModal")
+        );
+
+        addMemberModal.show();
+    });
+</script>
+{% endif %}
 {% endblock %}

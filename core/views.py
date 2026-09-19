@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar, Category, Review
-from core.forms import NewSeminarForm, ReviewForm, NewOrganizationForm
+from core.models import Seminar, Category, Review, Organization
+from core.forms import NewSeminarForm, ReviewForm, NewOrganizationForm, OrganizationInvitationForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.contrib import messages
-from accounts.models import User
+from accounts.models import User, OrganizationInvitation, Notification
 from django.views.decorators.http import require_POST
 from django.utils.http import url_has_allowed_host_and_scheme
 from urllib.parse import urlencode
 from django.utils.timezone import localtime
 from core.services import participate_in_seminar, SeminarPurchaseError
+from django.http import HttpResponseNotAllowed
 
 @login_required
 def new_seminar(request):
@@ -99,7 +100,7 @@ def edit_seminar(request, seminar_id):
         form = NewSeminarForm(request.POST, request.FILES, instance=seminar)
         if form.is_valid():
             form.save()
-        return redirect('core:seminar_detail', seminar_id=seminar.id)
+            return redirect('core:seminar_detail', seminar_id=seminar.id)
     else:
         form = NewSeminarForm(instance=seminar)
     return render(request, 'core/edit_seminar.html', context={'form':form, 'seminar':seminar})
@@ -161,3 +162,44 @@ def new_organization(request):
     else:
         form = NewOrganizationForm()
     return render(request, 'core/new_organization.html', context={'form': form})
+
+@login_required
+def edit_organization(request, id):
+    organization = get_object_or_404(Organization, id=id)
+    if request.method == 'POST':
+        form = NewOrganizationForm(request.POST, request.FILES, instance=organization)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard:organization_detail', id)
+    else:
+        form = NewOrganizationForm(instance=organization)
+    return render(request, 'core/edit_organization.html', context={'form': form, 'organization': organization})
+
+@login_required
+def delete_organization(request, id):
+    organization = get_object_or_404(Organization, id=id)
+    organization.delete()
+    return redirect('dashboard:organizations')
+
+@login_required
+def send_organization_invitation(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    form = OrganizationInvitationForm(request.POST, request_user=request.user)
+    if form.is_valid():
+        organization = form.cleaned_data['organization_id']
+        invited_user = form.cleaned_data['username']
+        role = form.cleaned_data['role']
+        OrganizationInvitation.objects.create(organization=organization, user=invited_user, role=role)
+        Notification.objects.create(
+            recipient=invited_user,
+            title='Organization Invitation',
+            message=f'{organization.owner.username} invited you to join {organization.name} as a {role}.',
+            notification_type=Notification.NotificationTypeChoices.INVITATION,
+            )
+        messages.success(request, 'The invitation was sent successfully.')
+        return redirect('dashboard:organization_detail', organization.id)
+
+    organization = get_object_or_404(Organization, id=request.POST.get('organization_id'), owner=request.user)
+    return render(request, 'dashboard/organization_detail.html', {'organization': organization, 'invitation_form': form, 'invitation_form_open': True})

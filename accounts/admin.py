@@ -1,14 +1,14 @@
 from django.contrib import admin
-from accounts.models import User, Notification
+from accounts.models import User, Notification, Wallet, WalletTransaction, OrganizationInvitation
 from django.urls import path
 from django.shortcuts import get_object_or_404, redirect, render
-from accounts.models import Wallet, WalletTransaction
 from accounts.forms import WalletDepositForm
 from django.db import transaction
 from django.contrib import messages
 
 admin.site.register(User)
 admin.site.register(Notification)
+admin.site.register(OrganizationInvitation)
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):

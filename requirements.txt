@@ -2,6 +2,8 @@ asgiref==3.11.1
 Django==6.0.7
 django-bootstrap5==26.2
 django-ckeditor-5==0.2.20
+django-phonenumber-field==8.5.0
+phonenumbers==9.0.39
 pillow==12.3.0
 sqlparse==0.5.5
 tzdata==2026.2

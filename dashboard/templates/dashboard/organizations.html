@@ -10,7 +10,7 @@
     <h1>Organizations</h1>
     <div class="row g-2 mt-4">
     {% for organization in organizations %}
-    <div class="card col-md-6">
+    <div class="card col-md-5 me-md-2">
         <a class="text-decoration-none text-reset" href="{% url 'dashboard:organization_detail' organization.id %}">
             <div class="card-body d-flex align-items-center">
                 <img class="d-inline me-2" src="{{ organization.logo_url }}" height="100" width="100" alt="organization logo">

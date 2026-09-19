@@ -19,16 +19,19 @@ from django.urls import path, include
 from core.views import home
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views import new_organization
+from core.views import new_organization, edit_organization, delete_organization, send_organization_invitation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('seminar/', include('core.urls')),
-    path('organization/new/', new_organization, name='new_organization'),
     path('dashboard/', include('dashboard.urls')),
     path('blog/', include('blog.urls')),
+    path('organization/new/', new_organization, name='new_organization'),
+    path('organization/edit/<int:id>/', edit_organization, name='edit_organization'),
+    path('organization/delete/<int:id>/', delete_organization, name='delete_organization'),
+    path('organization/send-invitation/', send_organization_invitation, name='send_organization_invitation'),
     path('ckeditor5/', include('django_ckeditor_5.urls'))
 ]
 
