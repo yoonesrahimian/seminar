@@ -19,7 +19,7 @@ from django.urls import path, include
 from core.views import home
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views import new_organization, edit_organization, delete_organization, send_organization_invitation
+from core.views import new_organization, edit_organization, delete_organization, send_organization_invitation, answer_organization_invitation, delete_organization_member
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +32,8 @@ urlpatterns = [
     path('organization/edit/<int:id>/', edit_organization, name='edit_organization'),
     path('organization/delete/<int:id>/', delete_organization, name='delete_organization'),
     path('organization/send-invitation/', send_organization_invitation, name='send_organization_invitation'),
+    path('invitation/answer/', answer_organization_invitation, name='answer_invitation'),
+    path('organization/member/delete/', delete_organization_member, name='delete_organization_member'),
     path('ckeditor5/', include('django_ckeditor_5.urls'))
 ]
 

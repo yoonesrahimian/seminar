@@ -16,11 +16,15 @@
     </div>
     <div class="col-md-7 col-lg-8 mx-auto">
         <form action="{% url 'core:new_seminar' %}" method="post" enctype="multipart/form-data" id="seminar-form" novalidate>
-            {% csrf_token %}          
+            {% csrf_token %}       
+            {% if show_organizations %}   
+                {% include 'components/form_field.html' with field=form.organization %}
+            {% endif %}
             {% include 'components/form_field.html' with field=form.title %}
             {% include 'components/form_field.html' with field=form.description %}
             {% include 'components/price_field.html' with field=form.price %}
             {% include 'components/form_field.html' with field=form.location %}
+            {% include 'components/form_field.html' with field=form.max_participants %}
             {% include 'components/form_field.html' with field=form.is_public %}
             {% include 'components/form_field.html' with field=form.is_inperson %}
             {% include 'components/form_field.html' with field=form.session_start %}

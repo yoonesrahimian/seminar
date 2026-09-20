@@ -1,16 +1,20 @@
 from django import forms
 from core.models import Seminar, Review, Organization, OrganizationMembership
 from accounts.models import User, OrganizationInvitation
+from django.db.models import Q
 
 class NewSeminarForm(forms.ModelForm):
     price = forms.CharField(help_text='Set the price to zero so your seminar can be viewed for Free.', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # organization = forms.ChoiceField(choices=)
     class Meta:
         model = Seminar
         exclude = ['teacher', 'participants', 'is_deleted']
         widgets = {
+            'organization': forms.Select(attrs={'class':'form-select'}),
             'title': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
             'location': forms.Textarea(attrs={'class':'form-control', 'rows':4}),
+            'max_participants': forms.NumberInput(attrs={'class':'form-control'}),
             'is_public': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'is_inperson': forms.CheckboxInput(attrs={'class':'form-check-input'}),
             'session_start': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
@@ -19,8 +23,10 @@ class NewSeminarForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class':'form-control', 'id': 'image-input', 'accept': 'image/*'}),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['organization'].queryset = Organization.objects.filter(Q(owner=user) | Q(members=user)).distinct()
+
         if self.is_bound:
             for name in self.fields:
                 if self.errors.get(name):
@@ -124,14 +130,8 @@ class OrganizationInvitationForm(forms.Form):
         if not organization or not invited_user:
             return cleaned_data
 
-        pending_invitation = OrganizationInvitation.objects.filter(
-            organization=organization,
-            user=invited_user,
-            status=OrganizationInvitation.StatusChoices.PENDING,
-        ).exists()
-
-        if pending_invitation:
-            raise forms.ValidationError('This user already has a pending invitation.')
+        if organization.owner == invited_user:
+            raise forms.ValidationError('You can not send invitation for yourself.')
 
         membership_exists = OrganizationMembership.objects.filter(
             organization=organization,
@@ -140,5 +140,14 @@ class OrganizationInvitationForm(forms.Form):
 
         if membership_exists:
             raise forms.ValidationError('This user is already a member of this organization.')
+
+        pending_invitation = OrganizationInvitation.objects.filter(
+            organization=organization,
+            user=invited_user,
+            status=OrganizationInvitation.StatusChoices.PENDING,
+        ).exists()
+
+        if pending_invitation:
+            raise forms.ValidationError('This user already has a pending invitation.')
 
         return cleaned_data

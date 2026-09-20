@@ -35,56 +35,63 @@
                 </div>
                 <p class="lead">{{ seminar.description }}</p>
                 <hr>
-                <p class="lead">teacher: {{ seminar.teacher }}</p>
-                <p class="lead">category: {{ seminar.category }}</p>
+                {% if seminar.organization %}
+                <p class="lead">Organization: {{ seminar.organization.name }}</p>
+                {% endif %}
+                <p class="lead">Teacher: {{ seminar.teacher }}</p>
+                <p class="lead">Category: {{ seminar.category }}</p>
                 <p class="lead">{{ seminar.session_date }}</p>
                 <p class="lead">Start: {{ seminar.session_start }}</p>
                 <p class="lead">End: {{ seminar.session_end }}</p>
-                <p class="lead">{% if seminar.location %}address: {{ seminar.location }}{% endif %}</p>
+                <p class="lead">{% if seminar.location %}Address: {{ seminar.location }}{% endif %}</p>
                 <p class="lead">{% if seminar.is_inperson %}Inperson{% else %}Online{% endif %}</p>
                 <hr>
                 <p class="lead">{{ seminar.status }}</p>
                 {% if seminar.status == "inprogress" %}
-                <div class="progress" role="progressbar" style="height: 20px;" aria-label="Animated striped example" aria-valuenow="{{ seminar.progress }}" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ seminar.progress }}%;"><span>{{ seminar.progress }}%</span></div>
-                </div>
+                    <div class="progress" role="progressbar" style="height: 20px;" aria-label="Animated striped example" aria-valuenow="{{ seminar.progress }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ seminar.progress }}%;"><span>{{ seminar.progress }}%</span></div>
+                    </div>
                 {% endif %}
                 
                 <hr>
                 <p class="lead">{{ seminar.participants.count }} Participants</p>
                 <div class="d-flex">
                     {% if not seminar.status == 'completed' %}
-                    {% if not request.user == seminar.teacher %}
-                    {% if is_joined %}
-                    <button class="btn btn-outline-success flex-shrink-0 me-4" disabled>Participated!</button>
-                    {% else %}
-                    <form method="post" action="{% url 'core:participate' seminar.id %}">
-                        {% csrf_token %}
-                        <button class="btn btn-outline-primary flex-shrink-0 me-4" type="submit">Participate</button>
+                        {% if not request.user == seminar.teacher %}
+                            {% if is_joined %}
+                                <button class="btn btn-outline-success flex-shrink-0 me-4" disabled>Participated!</button>
+                            {% else %}
+                                {% if seminar.max_participants and seminar.participants.count >= seminar.max_participants %}
+                                    <button type="button" class="btn btn-outline-info flex-shrink-0 me-4" disabled>Seminar Is Full</button>
+                                {% else%}
+                                    <form method="post" action="{% url 'core:participate' seminar.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-primary flex-shrink-0 me-4" type="submit">Participate</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'core:edit_seminar' seminar.id %}" class="btn btn-outline-warning flex-shrink-0 me-4">Edit</a>
+                            <button type="button" class="btn btn-outline-danger flex-shrink-0 me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Seminar</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete the seminar?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                                            <a href="{% url 'core:delete_seminar' seminar.id %}" class="btn btn-danger">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
-                    </form>
-                    {% else %}
-                    <a href="{% url 'core:edit_seminar' seminar.id %}" class="btn btn-outline-warning flex-shrink-0 me-4">Edit</a>
-                    <button type="button" class="btn btn-outline-danger flex-shrink-0 me-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Seminar</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete the seminar?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                            <a href="{% url 'core:delete_seminar' seminar.id %}" class="btn btn-danger">Delete</a>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                    {% endif %}
                     {% endif %}
                 </div>
             </div>

@@ -54,6 +54,7 @@ class Seminar(models.Model):
     description = models.TextField()
     price = models.PositiveIntegerField()
     location = models.TextField()
+    max_participants = models.PositiveBigIntegerField(blank=True, null=True)
     is_public = models.BooleanField()
     is_inperson = models.BooleanField()
     session_start = models.DateTimeField()

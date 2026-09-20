@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar, Category, Review, Organization
+from core.models import Seminar, Category, Review, Organization, OrganizationMembership
 from core.forms import NewSeminarForm, ReviewForm, NewOrganizationForm, OrganizationInvitationForm
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -15,16 +15,19 @@ from django.http import HttpResponseNotAllowed
 
 @login_required
 def new_seminar(request):
+    is_owner = request.user.owned_organizations.exists()
+    is_membership = request.user.organization_memberships.exists()
+    show_organizations = True if is_owner or is_membership else False
     if request.method == 'POST':
-        form = NewSeminarForm(request.POST, request.FILES)
+        form = NewSeminarForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             seminar = form.save(commit=False)
             seminar.teacher = request.user
             form.save()
             return redirect('core:seminar_list')
     else:
-        form = NewSeminarForm()
-    return render(request, 'core/new_seminar.html', context={'form':form})
+        form = NewSeminarForm(user=request.user)
+    return render(request, 'core/new_seminar.html', context={'form':form, 'show_organizations': show_organizations})
 
 def seminar_detail(request, seminar_id):
     seminar = get_object_or_404(Seminar, id=seminar_id)
@@ -85,6 +88,9 @@ def participate(request, seminar_id):
     seminar = get_object_or_404(Seminar, id=seminar_id, is_deleted=False)
     if request.method != 'POST':
         return redirect('core:seminar_detail', seminar_id)
+    if seminar.max_participants and seminar.participants.count() >= seminar.max_participants:
+        messages.error(request, 'This seminar has reached the maximum number of participants.')
+        return redirect('core:seminar_detil', seminar_id)
     try:
         participate_in_seminar(request.user, seminar)
     except SeminarPurchaseError as error:
@@ -178,7 +184,11 @@ def edit_organization(request, id):
 @login_required
 def delete_organization(request, id):
     organization = get_object_or_404(Organization, id=id)
-    organization.delete()
+    if organization.owner == request.user:
+        if organization.seminars.exists():
+            messages.error(request, 'As long as the seminars exist, you cannot delete the organization.')
+            return redirect('dashboard:organization_detail', organization.id)
+        organization.delete()
     return redirect('dashboard:organizations')
 
 @login_required
@@ -191,15 +201,64 @@ def send_organization_invitation(request):
         organization = form.cleaned_data['organization_id']
         invited_user = form.cleaned_data['username']
         role = form.cleaned_data['role']
-        OrganizationInvitation.objects.create(organization=organization, user=invited_user, role=role)
+        invitation = OrganizationInvitation.objects.create(
+            organization=organization,
+            user=invited_user,
+            role=role,
+            )
         Notification.objects.create(
             recipient=invited_user,
             title='Organization Invitation',
             message=f'{organization.owner.username} invited you to join {organization.name} as a {role}.',
             notification_type=Notification.NotificationTypeChoices.INVITATION,
+            invitation=invitation,
             )
         messages.success(request, 'The invitation was sent successfully.')
         return redirect('dashboard:organization_detail', organization.id)
 
     organization = get_object_or_404(Organization, id=request.POST.get('organization_id'), owner=request.user)
     return render(request, 'dashboard/organization_detail.html', {'organization': organization, 'invitation_form': form, 'invitation_form_open': True})
+
+@login_required
+def answer_organization_invitation(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    invitation_id = request.POST.get('invitation_id')
+    invitation = get_object_or_404(OrganizationInvitation, id=invitation_id)
+    answer = request.POST.get('answer')
+    if invitation.user != request.user:
+        messages.error(request, 'You do not have permission to use this invitation.')
+        return redirect('dashboard:notifications')
+    if invitation.status == 'pending':
+        if answer == 'accept':
+            invitation.status = OrganizationInvitation.StatusChoices.ACCEPTED
+            invitation.save()
+            Notification.objects.filter(invitation=invitation).update(is_read=True)
+            OrganizationMembership.objects.create(
+                organization=invitation.organization,
+                user=invitation.user,
+                role=invitation.role,
+            )
+            messages.success(request, f'You accepted invitation from {invitation.organization} organization!')
+        elif answer == 'reject':
+            invitation.status = OrganizationInvitation.StatusChoices.REJECTED
+            invitation.save()
+            Notification.objects.filter(invitation=invitation).update(is_read=True)
+            messages.info(request, f'You rejected invitation from {invitation.organization} organization.')
+        else:
+            messages.error(request, 'You have to accept or reject invitation.')
+    else:
+        messages.error(request, 'You answerd the invitation.')
+    return redirect('dashboard:notifications')
+
+@login_required
+@require_POST
+def delete_organization_member(request):
+    organization = get_object_or_404(Organization, id=request.POST.get('organization_id'))
+    member = get_object_or_404(OrganizationMembership, id=request.POST.get('member_id'))
+    if request.user == organization.owner and member.organization == organization:
+            member.delete()
+            messages.success(request, 'The user has been deleted')
+            return redirect('dashboard:organization_detail', organization.id)
+    messages.error(request, 'Something is wrong.')
+    return redirect('dashboard:organizations')

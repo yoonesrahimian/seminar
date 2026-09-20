@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from core.models import Seminar, Organization
+from core.models import Seminar, Organization, OrganizationMembership
 from blog.models import Post
 from core.forms import OrganizationInvitationForm
+from django.db.models import Q
 
 @login_required
 def dashboard(request):
@@ -48,14 +49,19 @@ def wallet(request):
 
 @login_required
 def organizations(request):
-    organizations = request.user.owned_organizations.all()
+    organizations = Organization.objects.filter(Q(owner=request.user) | Q(members=request.user)).distinct()
     return render(request, 'dashboard/organizations.html', context={'organizations': organizations})
 
 @login_required
 def organization_detail(request, id):
     organization = get_object_or_404(Organization, id=id)
+    members = OrganizationMembership.objects.filter(organization=organization)
+    seminars = organization.seminars.all()
+
     context={
         'organization': organization,
-        'invitation_form': OrganizationInvitationForm(initial={'organization_id': organization.id})
+        'invitation_form': OrganizationInvitationForm(initial={'organization_id': organization.id}),
+        'members': members,
+        'seminars': seminars,
         }
     return render(request, 'dashboard/organization_detail.html', context=context)

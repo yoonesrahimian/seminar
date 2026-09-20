@@ -5,46 +5,50 @@
     <div class="container px-4 px-lg-5 mt-5">
         <h2 class="h2 pb-3">Notifications</h2>
         {% for notification in notifications %}
-        {% if notification.notification_type == 'normal' %}
-            {% if not notification.is_read %}
-            <a href="{% url 'accounts:mark_notification_as_read' notification.id %}" class="text-decoration-none text-dark">
-                <div class="card mb-2 bg-body-tertiary border-primary">
+            {% if notification.notification_type == 'normal' %}
+                {% if not notification.is_read %}
+                    <a href="{% url 'accounts:mark_notification_as_read' notification.id %}" class="text-decoration-none text-dark">
+                        <div class="card mb-2 bg-body-tertiary border-primary">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ notification.title}}</h5>
+                                <p class="card-text">{{ notification.message }}</p>
+                                <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
+                            </div>
+                        </div>
+                    </a>
+                {% else %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ notification.title}}</h5>
+                            <p class="card-text">{{ notification.message }}</p>
+                            <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
+                        </div>
+                    </div>
+                {% endif %}
+            {% elif notification.notification_type == 'invitation' %}
+            <!-- <a href="{% url 'accounts:mark_notification_as_read' notification.id %}" class="text-decoration-none text-dark"> -->
+                <div class="card mb-2">
                     <div class="card-body">
-                        <h5 class="card-title">{{ notification.title}}</h5>
-                        <p class="card-text">{{ notification.message }}</p>
-                        <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
-                    </div>
-                </div>
-            </a>
-            {% else %}
-            <div class="card mb-2">
-                <div class="card-body">
-                    <h5 class="card-title">{{ notification.title}}</h5>
-                    <p class="card-text">{{ notification.message }}</p>
-                    <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
-                </div>
-            </div>
-            {% endif %}
-        {% elif notification.notification_type == 'invitation' %}
-        <!-- <a href="{% url 'accounts:mark_notification_as_read' notification.id %}" class="text-decoration-none text-dark"> -->
-            <div class="card mb-2">
-                <div class="card-body">
-                    <div>
-                        <h5 class="card-title">{{ notification.title}}</h5>
-                        <p class="card-text">{{ notification.message }}</p>
-                        <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
-                    </div>
-                    <div class="mt-2">
-                    {% if notification.invitation.status != 'pending' %}
-                        <button class="btn btn-outline-info" disabled>{{ notification.invitation.status }}</button>
-                    {% else %}
-                        <button class="btn btn-success">Accept</button>
-                        <button class="btn btn-danger">Reject</button>
+                        <div>
+                            <h5 class="card-title">{{ notification.title}}</h5>
+                            <p class="card-text">{{ notification.message }}</p>
+                            <small class="text-muted">{{ notification.created_at|date:'M d, Y H:i' }}</small>
+                        </div>
+                        <div class="mt-2">
+                        {% if notification.invitation.status != 'pending' %}
+                            <button class="btn btn-outline-info" disabled>{{ notification.invitation.status }}</button>
+                        {% else %}
+                            <form action="{% url 'answer_invitation' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="invitation_id" value="{{ notification.invitation.id }}">
+                                <button type="submit" class="btn btn-success" name="answer" value="accept">Accept</button>
+                                <button type="submit" class="btn btn-danger" name="answer" value="reject">Reject</button>
+                            </form>
                         {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
         {% empty %}
         <p>You don't have any notifications.</p>
         {% endfor %}
