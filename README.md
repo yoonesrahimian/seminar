@@ -22,8 +22,6 @@ The platform allows users to discover and register for seminars, manage their pr
 
 ![Blog](screenshots/blog.png)
 
-> Update the image filenames above if your screenshot filenames are different.
-
 ## Features
 
 ### 👤 User Management
@@ -39,9 +37,8 @@ The platform allows users to discover and register for seminars, manage their pr
 ### 🎓 Seminar Management
 
 * Create and manage seminars
-* Seminar categories and nested categories
+* Seminar categories
 * Seminar images
-* Teacher information
 * Participant management
 * Online and in-person seminars
 * Session start and end times
@@ -55,7 +52,6 @@ The platform allows users to discover and register for seminars, manage their pr
 
 * Search functionality
 * Category-based filtering
-* Nested categories
 * Category-aware search
 * Breadcrumb navigation
 * Search across relevant content
@@ -116,7 +112,7 @@ The platform allows users to discover and register for seminars, manage their pr
 
 * **Python**
 * **Django 6**
-* **PostgreSQL**
+* **SQLite 3**
 * **Bootstrap 5**
 * **django-bootstrap5**
 * **django-ckeditor-5**
@@ -186,9 +182,7 @@ The project dependencies are pinned in `requirements.txt`, including Django 6.0.
 
 ### 4. Configure the database
 
-Configure the project's database settings for your PostgreSQL installation.
-
-Make sure the database exists and the configured credentials have permission to access it.
+Configure the project's database settings for your SQLite 3 installation.
 
 ### 5. Apply migrations
 
@@ -218,16 +212,18 @@ http://127.0.0.1:8000/
 
 Sensitive configuration should be kept outside the repository.
 
+Create a `.env` file based on `.env.example`:
+
+    cp .env.example .env
+
+The `.env` file is not committed to the repository.
+
 For a production setup, values such as the following should be provided through environment variables:
 
 ```text
-SECRET_KEY
-DEBUG
-DATABASE_NAME
-DATABASE_USER
-DATABASE_PASSWORD
-DATABASE_HOST
-DATABASE_PORT
+DJANGO_SECRET_KEY
+DJANGO_DEBUG
+ALLOWED_HOSTS
 ```
 
 Never commit passwords, secret keys, or other sensitive credentials to Git.
@@ -246,51 +242,13 @@ The project is separated into Django applications according to responsibility:
 
 This separation keeps different parts of the application organized and makes the project easier to maintain.
 
-## Development
-
-Create migrations after changing models:
-
-```bash
-python manage.py makemigrations
-```
-
-Apply migrations:
-
-```bash
-python manage.py migrate
-```
-
-Run Django's system checks:
-
-```bash
-python manage.py check
-```
-
-Start the development server:
-
-```bash
-python manage.py runserver
-```
-
-## Future Improvements
-
-Possible future improvements include:
-
-* Django REST Framework API
-* Online payment gateway integration
-* Automated background tasks
-* Email notifications
-* More comprehensive automated testing
-* Production deployment
-* Advanced search and filtering
-
 ## License
 
 This project was developed for educational and portfolio purposes.
 
 ## Author
 
-**Yoones Rahimian**
+**yoones Rahimian**
 
 GitHub: [@yoonesrahimian](https://github.com/yoonesrahimian)
 
